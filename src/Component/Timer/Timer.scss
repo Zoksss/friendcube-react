@@ -1,0 +1,137 @@
+.timer-container {
+    position: relative;
+    font-weight: 800;
+    height: 100vh;
+    .timer-top {
+        .timer-container-puzzle-label {
+            font-size: 22px;
+            color: #ee6c4d;
+            margin: 0;
+            margin-top: 20px;
+        }
+        .timer-container-scramble {
+            font-size: 28px;
+            margin: 0;
+        }
+    }
+    .timer-container-center {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .time {
+            font-size: 100px;
+            margin: 0;
+        }
+        .timers-avg {
+            .ao5,
+            .ao12 {
+                font-size: 28px;
+                margin: 0;
+            }
+        }
+    }
+    .timer-container-opponet {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .opponet-time {
+            .opponet-nickname,
+            .opponet-time {
+                font-size: 24px;
+                color: #ee6c4d;
+                margin: 0;
+            }
+        }
+        .opponet-avg {
+            margin-top: 20px;
+            .opponet-ao5,
+            .opponet-ao12 {
+                font-weight: 500;
+                font-size: 18px;
+                color: #ee6c4d;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    //background-color: #181818;
+    width: 220px;
+    height: 100%;
+    padding: 15px;
+    font-weight: 500;
+    .sidebar-round {
+        width: 100%;
+        background-color: #443e3e;
+        color: #181818;
+        font-size: 18px;
+        text-align: left;
+        height: 40px;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        p {
+            margin-left: 8px;
+        }
+    }
+    .sidebar-player-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 5px;
+        .sidebar-player-nickname,
+        .sidebar-player-time {
+            margin: 2px 0;
+        }
+    }
+
+    .sidebar-buttons {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+        padding: 0 15px ;
+        .sidebar-buttons-top {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            button {
+                width: 30%;
+                height: 60px;
+                background-color: #ee6c4d;
+                outline: none;
+                border: none;
+                margin: 0 3px;
+                transition: 100ms all ease;
+
+                &:hover {
+                    background-color: #293241;
+                }
+                img {
+                    height: 29px;
+                    width: 29px;
+                }
+            }
+        }
+        .leave-room-btn {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: #ee6c4d;
+            font-size: 16px;
+            padding: 20px 0;
+            width: 100%;
+            margin: 5px 0;
+            transition: 100ms all ease;
+
+            &:hover {
+                background-color: #293241;
+            }
+        }
+    }
+}
