@@ -1,0 +1,142 @@
+.logincreate-container {
+    background-color: rgba(0, 0, 0, 0.758);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .login-info {
+        width: 500px;
+        height: 450px;
+        background-color: #293241;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 30px 40px;
+        position: relative;
+        h1 {
+            font-size: 36px;
+        }
+        h2 {
+            span {
+                color: #ee6c4d;
+            }
+            font-size: 32px;
+            font-weight: 500;
+            margin-top: -5px;
+        }
+        p {
+            font-size: 18px;
+            color: #b9b9b9;
+            margin-top: 10px;
+        }
+
+        .login-info-buttons {
+            position: absolute;
+            bottom: 60px;
+            left: 40px;
+            width: 80%;
+            height: 60px;
+
+            button {
+                width: 70px;
+                height: 100%;
+                background-color: #ee6c4d;
+                border: none;
+                outline: none;
+                img {
+                    height: 70%;
+                }
+            }
+            .buy-me-the-coffe {
+                font-size: 16px;
+                margin-top: 20px;
+            }
+        }
+    }
+    .login-create-input {
+        width: 340px;
+        height: auto;
+        background-color: #201e1f;
+        .login-create-input-title {
+            padding: 40px 40px 0 40px;
+            display: flex;
+            justify-content: space-between;
+            .join-label {
+                font-size: 28px;
+                font-weight: 700;
+                color: #ee6c4d;
+            }
+            a {
+                color: white;
+                font-size: 20px;
+                font-weight: 500;
+            }
+        }
+        .login-form {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 40px 40px 40px;
+            align-items: flex-start;
+            label {
+                font-size: 18px;
+                margin: 5px 0;
+            }
+            input {
+                background-color: #443e3e;
+                outline: none;
+                border: none;
+                height: 45px;
+                font-size: 20px;
+                color: white;
+                padding: 0 15px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .selected-puzzle-label{
+                color: #ee6c4d;
+                margin-left: 3px;
+                font-weight: 600;
+            }
+            .join-btn {
+                background-color: #ee6c4d;
+                font-weight: 700;
+                width: 100%;
+                margin-top: 50px;
+                transition: 200ms all ease;
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+
+            .puzzle-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                .puzzle-button {
+                    background-color: #443e3e;
+                    width: 70px;
+                    height: 64px;
+                    margin: 5px;
+                    border: none;
+                    transition: 100ms all ease;
+                    &:hover{
+                        transform: scale(1.1);
+                    }
+                    img {
+                        height: 50px;
+                    }
+                }
+                .puzzle-button-active {
+                    background-color: #ee6c4d;
+                }
+            }
+        }
+    }
+}

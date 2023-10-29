@@ -15,6 +15,10 @@ const Sidebar_Time = () => {
                 <p className="sidebar-player-nickname">Damjan311</p>
                 <p className="sidebar-player-time">25.09</p>
             </div>
+            <div className="sidebar-player-row">
+                <p className="sidebar-player-nickname">simkee</p>
+                <p className="sidebar-player-time">25.09</p>
+            </div>
         </div>
     );
 }
