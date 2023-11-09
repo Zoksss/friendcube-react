@@ -1,3 +1,4 @@
+import React from 'react';
 import './LoginCreate.scss';
 import Coffee from "../../assets/coffee.svg"
 
@@ -7,6 +8,11 @@ import _4x4 from "../../assets/444.svg"
 import _megaminx from "../../assets/megaminx.svg"
 import _pyraminx from "../../assets/pyraminx.svg"
 import _square1 from "../../assets/square1.svg"
+
+const key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+
+
+
 
 const LoginCreate = () => {
     return (
