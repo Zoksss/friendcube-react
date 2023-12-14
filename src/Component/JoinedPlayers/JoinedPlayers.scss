@@ -1,0 +1,85 @@
+.joined-players-container {
+    background-color: rgba(0, 0, 0, 0.758);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .joined-players-card {
+        width: 400px;
+        height: auto;
+        min-height: 500px;
+        background-color: #201e1f;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        padding: 30px 40px 18px 40px;
+        position: relative;
+        .joined-players-title {
+            color: #ee6c4d;
+            font-size: 24px;
+            padding: 20px 15px;
+            font-weight: 600;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #443e3e;
+            .joined-players-roomcode{
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 28px;
+            }
+        }
+        .players-wrapper {
+            width: 100%;
+            margin-top: 15px;
+            .player {
+                display: flex;
+                justify-content: space-between;
+                font-size: 20px;
+                margin: 15px 0;
+            }
+            .leader {
+                color: #ee6c4d;
+            }
+        }
+        .joined-players-buttons {
+            margin-top: 100px;
+            width: 100%;
+            .start-btn {
+                background-color: #ee6c4d;
+                font-size: 24px;
+                width: 100%;
+                padding: 15px 0;
+                color: white;
+                font-weight: 600;
+                border: none;
+                transition: 150ms all ease;
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+            .cancel-btn {
+                background-color: transparent;
+                font-size: 22px;
+                width: 100%;
+                padding: 8px 0;
+                color: white;
+                font-weight: 400;
+                border: none;
+                margin-top: 15px;
+                transition: 150ms all ease;
+
+                &:hover {
+                    background-color: #293241;
+                }
+            }
+        }
+    }
+}

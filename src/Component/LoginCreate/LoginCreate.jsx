@@ -9,15 +9,11 @@ import _megaminx from "../../assets/megaminx.svg"
 import _pyraminx from "../../assets/pyraminx.svg"
 import _square1 from "../../assets/square1.svg"
 
-const key = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
-
-
-
-const LoginCreate = () => {
+const LoginCreate = (props) => {
     return (
         <>
-            <div className="logincreate-container" style={{ display: "none" }}>
+            <div className="logincreate-container">
                 <div className="login-info ">
                     <h1>FriendCube</h1>
                     <h2>solve <span>with</span> friends</h2>
@@ -29,17 +25,17 @@ const LoginCreate = () => {
                 </div>
                 <div className="login-create-input">
                     <div className="login-create-input-title">
-                        <p className="join-label">Create</p>
-                        <a href="/">or Join</a>
+                        <p className="join-label">{props.isLogin ? "Login" : "Create"}</p>
+                        <button href="/" onClick={() => props.setIsLogin(!props.isLogin)}>{!props.isLogin ? "or Login" : "or Create"}</button>
                     </div>
-                    {false && <form action="/" className="login-form">
+                    {props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" maxLength="8" />
                         <label htmlFor="">Room Code</label>
                         <input type="text" placeholder="eg. 01344122" maxLength="8" />
-                        <input type="submit" value="join" className="join-btn" />
+                        <button className="join-btn" onClick={(e) => { e.preventDefault(); props.setIsJoinedPlayers(true) }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
-                    {false && <form action="/" className="login-form">
+                    {!props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" />
                         <label htmlFor="">Puzzle <span className="selected-puzzle-label">(3x3)</span></label>
@@ -63,24 +59,8 @@ const LoginCreate = () => {
                                 <img src={_square1} alt="" />
                             </button>
                         </div>
-                        <input type="submit" value="join" className="join-btn" />
+                        <button className="join-btn" onClick={(e) => { e.preventDefault(); props.setIsJoinedPlayers(true) }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
-
-                </div>
-            </div>
-            <div className="joined-players-container">
-                <div className="joined-players-card">
-                    <div className="joined-players-title">Joined Players</div>
-                    <div className="players-wrapper">
-                        <div className="player leader"><p>Zoks</p><p>#1</p></div>
-                        <div className="player"><p>Simkeee</p><p>#2</p></div>
-                        <div className="player"><p>Damjan311</p><p>#3</p></div>
-                        <div className="player"><p>Dimeee</p><p>#4</p></div>
-                    </div>
-                    <div className="joined-players-buttons">
-                        <button className="start-btn">start</button>
-                        <button className="cancel-btn">cancel</button>
-                    </div>
                 </div>
             </div>
         </>
