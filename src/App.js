@@ -33,8 +33,6 @@ function App() {
       {!isJoinedPlayers && !isTimerScreen && <LoginCreate isLogin={isLogin} setIsLogin={setIsLogin} setIsJoinedPlayers={setIsJoinedPlayers} />}
       {isJoinedPlayers && < JoinedPlayers setIsJoinedPlayers={setIsJoinedPlayers} setIsTimerScreen={setIsTimerScreen} />}
       <Timer />
-      <button {...longPressEvent}>use  Loooong  Press</button>
-
     </div>
   );
 }
