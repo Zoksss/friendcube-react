@@ -23,17 +23,17 @@ const Timer = () => {
     let intervalId;
 
     if (isRunning) {
-      const startTime = Date.now() - elapsedTime;
-      intervalId = setInterval(() => {
-        const now = Date.now();
-        setElapsedTime(now - startTime);
-      }, 10); // Update every 10 milliseconds (100th of a second)
+        const startTime = Date.now() - elapsedTime;
+        intervalId = setInterval(() => {
+            const now = Date.now();
+            setElapsedTime(now - startTime);
+        }, 10); // Update every 10 milliseconds (100th of a second)
     } else {
-      clearInterval(intervalId);
+        clearInterval(intervalId);
     }
 
     return () => clearInterval(intervalId);
-  }, [isRunning, elapsedTime]);
+}, [isRunning, elapsedTime]);
 
   const startStopwatch = () => {
     setIsRunning(true);
@@ -75,12 +75,20 @@ const Timer = () => {
 
     const handleKeyUp = (event) => {
       if (event.code === 'Space') {
-        if(isSpaceHeld) startStopwatch();
-        spaceDepressed();
-        setIsSpaceHeld(false);
-        clearTimeout(holdTimeout);
+          if (isSpaceHeld) {
+              spaceDepressed();
+              // Clear the hold timeout since the spacebar has been released
+              clearTimeout(holdTimeout);
+              setIsSpaceHeld(false);
+      
+              // Check if the spacebar was held for at least 2 seconds before releasing
+              if (elapsedTime >= 2000) {
+                  startStopwatch(); // Start the stopwatch
+              }
+          }
       }
-    };
+  };
+    
 
     const spacePressed = () => {
       console.log('Space pressed');
@@ -88,7 +96,7 @@ const Timer = () => {
     };
 
     const spaceDepressed = () => {
-      if(isRunning) stopStopwatch()
+      if (isRunning) stopStopwatch()
       console.log('Space depressed');
       setTimerColor("white")
     };
