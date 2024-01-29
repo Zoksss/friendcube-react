@@ -2,6 +2,9 @@ import './Timer.scss';
 import Sidebar from './Sidebar';
 import React from 'react';
 
+let isSpace = false;
+
+
 const Timer = () => {
 
   // misc states 
@@ -11,6 +14,8 @@ const Timer = () => {
   // space handler
   const [holdTimeout, setHoldTimeout] = React.useState(null);
   const [isSpaceHeld, setIsSpaceHeld] = React.useState(false);
+
+  //const [isSpace, setIsSpace] = React.useState(false);
 
 
   // stopwatch
@@ -23,20 +28,22 @@ const Timer = () => {
     let intervalId;
 
     if (isRunning) {
-        const startTime = Date.now() - elapsedTime;
-        intervalId = setInterval(() => {
-            const now = Date.now();
-            setElapsedTime(now - startTime);
-        }, 10); // Update every 10 milliseconds (100th of a second)
+      const startTime = Date.now() - elapsedTime;
+      intervalId = setInterval(() => {
+        const now = Date.now();
+        setElapsedTime(now - startTime);
+      }, 10); // Update every 10 milliseconds (100th of a second)
     } else {
-        clearInterval(intervalId);
+      clearInterval(intervalId);
     }
 
     return () => clearInterval(intervalId);
-}, [isRunning, elapsedTime]);
+  }, [isRunning, elapsedTime]);
 
   const startStopwatch = () => {
+    resetStopwatch()
     setIsRunning(true);
+    isSpace = false;
   };
 
   const stopStopwatch = () => {
@@ -75,33 +82,34 @@ const Timer = () => {
 
     const handleKeyUp = (event) => {
       if (event.code === 'Space') {
-          if (isSpaceHeld) {
-              spaceDepressed();
-              // Clear the hold timeout since the spacebar has been released
-              clearTimeout(holdTimeout);
-              setIsSpaceHeld(false);
-      
-              // Check if the spacebar was held for at least 2 seconds before releasing
-              if (elapsedTime >= 2000) {
-                  startStopwatch(); // Start the stopwatch
-              }
+        if (isSpaceHeld) {
+          if (isSpace) {
+
+            startStopwatch();
+            //setIsSpace(false);
           }
+          spaceDepressed();
+          // Clear the hold timeout since the spacebar has been released
+          clearTimeout(holdTimeout);
+          setIsSpaceHeld(false);
+        }
       }
-  };
-    
+    };
+
 
     const spacePressed = () => {
       console.log('Space pressed');
       setTimerColor("red")
+      if (isRunning && !isSpace) stopStopwatch();
     };
 
     const spaceDepressed = () => {
-      if (isRunning) stopStopwatch()
       console.log('Space depressed');
       setTimerColor("white")
     };
 
     const spaceHolded = () => {
+      isSpace = true;
       console.log('Space holded');
       setTimerColor("green")
     };
@@ -115,7 +123,6 @@ const Timer = () => {
       clearTimeout(holdTimeout);
     };
   }, [holdTimeout, isSpaceHeld]);
-
 
 
   return (
