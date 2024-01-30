@@ -2,20 +2,29 @@ import './Timer.scss';
 import Sidebar from './Sidebar';
 import React from 'react';
 
+import generateScramble from './GenerateScramble';
+
 let isSpace = false;
+let currentTime = 0;
+let currentRound = 1;
 
-
-const Timer = () => {
+const Timer = (props) => {
 
   // misc states 
   const [timerColor, setTimerColor] = React.useState("white");
+  const [times, setTimes] = React.useState([]);
+
+  const [ao5, setAo5] = React.useState(-1);
+  const [ao12, setAo12] = React.useState(-1);
+
+  const [currentScramble, setCurrentScramble] = React.useState(generateScramble("3x3"));
+  const [sidebarTimesArray, setSidebarTimesArray] = React.useState([]);
 
 
   // space handler
   const [holdTimeout, setHoldTimeout] = React.useState(null);
   const [isSpaceHeld, setIsSpaceHeld] = React.useState(false);
 
-  //const [isSpace, setIsSpace] = React.useState(false);
 
 
   // stopwatch
@@ -24,6 +33,7 @@ const Timer = () => {
 
 
   // stopwatch logic and useEffect
+  /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     let intervalId;
 
@@ -32,6 +42,7 @@ const Timer = () => {
       intervalId = setInterval(() => {
         const now = Date.now();
         setElapsedTime(now - startTime);
+        currentTime = elapsedTime;
       }, 10); // Update every 10 milliseconds (100th of a second)
     } else {
       clearInterval(intervalId);
@@ -39,6 +50,7 @@ const Timer = () => {
 
     return () => clearInterval(intervalId);
   }, [isRunning, elapsedTime]);
+
 
   const startStopwatch = () => {
     resetStopwatch()
@@ -48,6 +60,26 @@ const Timer = () => {
 
   const stopStopwatch = () => {
     setIsRunning(false);
+    let x = times;       // pushing new time inside of times[] array
+    x.unshift(currentTime);
+    if (times.length >= 13) times.pop();
+    setTimes(x);
+
+    if (times.length > 4) {
+      let ao5temp = 0;
+      for (let i = 0; i < 5; i++)  ao5temp += times[i];
+      ao5temp = ao5temp / 5;
+      setAo5(ao5temp);
+    }
+    if (times.length > 11) {
+      let ao12temp = 0;
+      for (let i = 0; i < 12; i++)ao12temp += times[i];
+      ao12temp = ao12temp / 12;
+      setAo12(ao12temp);
+    }
+    console.log(times)
+    setCurrentScramble(generateScramble("3x3"));
+    addNewRoundObject();
   };
 
   const resetStopwatch = () => {
@@ -84,7 +116,6 @@ const Timer = () => {
       if (event.code === 'Space') {
         if (isSpaceHeld) {
           if (isSpace) {
-
             startStopwatch();
             //setIsSpace(false);
           }
@@ -125,18 +156,31 @@ const Timer = () => {
   }, [holdTimeout, isSpaceHeld]);
 
 
+  // sidebar rounds logic
+
+  const addNewRoundObject = () => {
+    console.log("New round array added...")
+    let x = sidebarTimesArray;
+    x.push([{round: currentRound, playerName: props.username, playerTime: currentTime}])
+    setSidebarTimesArray(x);
+    currentRound++;
+    console.log(sidebarTimesArray)
+  
+  }
+
+
   return (
     <div className="timer-container">
-      < Sidebar />
+      < Sidebar username={props.username} sidebarTimesArray={sidebarTimesArray} currentRound={currentRound} formatTime={formatTime}/>
       <div className="timer-top">
         <p className="timer-container-puzzle-label">3x3</p>
-        <p className="timer-container-scramble">L D R2 D2 B R’ D2 L R U2 D’ B’ U2 B’ R</p>
+        <p className="timer-container-scramble">{currentScramble}</p>
       </div>
       <div className="timer-container-center">
         <p className="time" style={{ color: `${timerColor}` }}>{formatTime(elapsedTime)}</p>
         <div className="timers-avg">
-          <p className="ao5">ao5: 31.09</p>
-          <p className="ao12">ao12: 27.41</p>
+          <p className="ao5">ao5: {ao5 !== -1 ? formatTime(ao5) : "na"}</p>
+          <p className="ao12">ao12: {ao12 !== -1 ? formatTime(ao12) : "na"}</p>
         </div>
       </div>
       <div className="timer-container-opponet">

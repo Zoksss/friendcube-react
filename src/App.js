@@ -13,6 +13,7 @@ function App() {
   const [isLogin, setIsLogin] = React.useState(true);
   const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);
   const [isTimerScreen, setIsTimerScreen] = React.useState(false);
+  const [username, setUsername] = React.useState("Zoksss");
 
   const onLongPress = () => {
     console.log('longpress is triggered');
@@ -32,7 +33,7 @@ function App() {
     <div className="App">
       {!isJoinedPlayers && !isTimerScreen && <LoginCreate isLogin={isLogin} setIsLogin={setIsLogin} setIsJoinedPlayers={setIsJoinedPlayers} />}
       {isJoinedPlayers && < JoinedPlayers setIsJoinedPlayers={setIsJoinedPlayers} setIsTimerScreen={setIsTimerScreen} />}
-      <Timer />
+      <Timer username={username}/>
     </div>
   );
 }
