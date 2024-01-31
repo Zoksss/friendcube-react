@@ -11,6 +11,21 @@ import _square1 from "../../assets/square1.svg"
 
 
 const LoginCreate = (props) => {
+    const [inputValue, setInputValue] = React.useState("");
+
+
+    const makeRoomId = (length) => {
+        let result = '';
+        let characters = '0123456789';
+        let charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+
+
     return (
         <>
             <div className="logincreate-container">
@@ -30,14 +45,18 @@ const LoginCreate = (props) => {
                     </div>
                     {props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
-                        <input type="text" placeholder="eg. Zoks" maxLength="8" />
+                        <input type="text" placeholder="eg. Zoks" maxLength="8" onChange={(e) => setInputValue(e.target.value)} />
                         <label htmlFor="">Room Code</label>
-                        <input type="text" placeholder="eg. 01344122" maxLength="8" />
-                        <button className="join-btn" onClick={(e) => { e.preventDefault(); props.setIsJoinedPlayers(true) }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
+                        <input type="text" placeholder="eg. 01344122" maxLength="8" onChange={(e) => props.setRoomInputValue(e.target.value)} />
+                        <button className="join-btn" onClick={(e) => {
+                            e.preventDefault();
+                            props.setIsJoinedPlayers(true);
+                            props.socket.emit('join', inputValue, props.roomInputValue, "3x3"); // makeRoomId();
+                        }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                     {!props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
-                        <input type="text" placeholder="eg. Zoks" />
+                        <input type="text" placeholder="eg. Zoks" onChange={(e) => setInputValue(e.target.value)} />
                         <label htmlFor="">Puzzle <span className="selected-puzzle-label">(3x3)</span></label>
                         <div className="puzzle-buttons">
                             <button className="puzzle-button">
