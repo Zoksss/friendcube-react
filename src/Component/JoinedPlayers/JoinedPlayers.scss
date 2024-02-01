@@ -52,6 +52,11 @@
         .joined-players-buttons {
             margin-top: 100px;
             width: 100%;
+            .joinedplayers-waitingforleader{
+                font-size: 22px;
+                font-weight: 600;
+                text-align: center;
+            }
             .start-btn {
                 background-color: #ee6c4d;
                 font-size: 24px;

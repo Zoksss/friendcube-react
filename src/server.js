@@ -43,31 +43,32 @@ io.on("connection", (socket) => {
     io.sockets.emit('onlineClientChange', online);
     socket.on("join", (nickname, roomCode, puzzle) => {
         //if (validateInput(nickname, roomCode, puzzle)) {
-            if (doesUsernameAlrdeyExists(nickname, roomCode)) {
-                socket.emit("serverError", "Nickname alredy used in this room.");
-                return;
-            }
-            if (rooms[roomCode] != undefined) {
-                if (!rooms[roomCode].isLocked) {
-                    socket.nickname = nickname;
-                    rooms[roomCode].addSocket(socket);
-                    socket.join(roomCode);
-                    socket.emit("joinToTimer");
-                    io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
-                    updateWaitingScreenStatus(roomCode);
-
-                }
-                else socket.emit("serverError", "Room Closed");
-            }
-            else {
+        if (doesUsernameAlrdeyExists(nickname, roomCode)) {
+            socket.emit("serverError", "Nickname alredy used in this room.");
+            return;
+        }
+        if (rooms[roomCode] != undefined) {
+            if (!rooms[roomCode].isLocked) {
                 socket.nickname = nickname;
-                rooms[roomCode] = new Room(socket.id, puzzle);
+                rooms[roomCode].addSocket(socket);
                 socket.join(roomCode);
-                socket.emit("joinToTimerLeader", roomCode);
+                socket.emit("joinToTimer");
                 io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+                socket.emit("leaderStartButton");
                 updateWaitingScreenStatus(roomCode);
+
             }
-            console.log(rooms);
+            else socket.emit("serverError", "Room Closed");
+        }
+        else {
+            socket.nickname = nickname;
+            rooms[roomCode] = new Room(socket.id, puzzle);
+            socket.join(roomCode);
+            socket.emit("joinToTimerLeader", roomCode);
+            io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+            updateWaitingScreenStatus(roomCode);
+        }
+        console.log(rooms);
         //} else socket.emit("serverError", "Input not valid");
     });
 
@@ -131,9 +132,10 @@ const updateWaitingScreenStatus = (roomCode) => {
     let msg = [];
     if (!rooms[roomCode]) return;
     rooms[roomCode].sockets.forEach(socket => {
-        console.log(io.sockets.sockets);
-        if (io.sockets.sockets[socket.socketId].nickname)
-            msg.push(io.sockets.sockets[socket.socketId].nickname);
+        let socketNickname = io.sockets.sockets.get(socket.socketId).nickname;
+        if (socketNickname)
+            if (rooms[roomCode].leader === socket.socketId) msg.push([socketNickname]);
+            else msg.push(socketNickname);
     });
     io.in(roomCode).emit("displayUsers", msg);
 }
@@ -145,7 +147,7 @@ const validateInput = (nickname, roomCode, puzzle) => {
     if (nickname.length < 3) return false;
     if (roomCode.length != 8) return false;
     for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false;
-    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyra" ) return false;
+    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyra") return false;
     return true;
 }
 function isLetter(str) {
@@ -164,25 +166,25 @@ const isEveryoneFinished = (roomCode) => {
 }
 
 const generateScramble = (puzzle) => {
-    if(puzzle === "3x3"){
+    if (puzzle === "3x3") {
         let scrambele = "";
         for (a = y = r = '', x = Math.random; a++ < 22; scrambele += (r + " '2"[0 | x(y = r) * 3] + ' '))
             for (; r == y; r = 'RLUDFB'[0 | x() * 6]);
         return scrambele;
     }
-    else if(puzzle === "2x2"){
+    else if (puzzle === "2x2") {
         let scrambele = "";
         for (a = y = r = '', x = Math.random; a++ < 10; scrambele += (r + " '2"[0 | x(y = r) * 3] + ' '))
             for (; r == y; r = 'RUF'[0 | x() * 3]);
         return scrambele;
     }
-    else if(puzzle === "pyra"){
+    else if (puzzle === "pyra") {
         let scrambele = "";
         for (a = y = r = '', x = Math.random; a++ < 9; scrambele += (r + " '"[0 | x(y = r) * 2] + ' '))
             for (; r == y; r = 'BRUL'[0 | x() * 4]);
-        for(let i = 0; i < 4; i++){
+        for (let i = 0; i < 4; i++) {
             let l = Math.floor(Math.random() * 2);
-            scrambele += (l==1?'brul'[i] + " '"[0 | Math.floor(Math.random() * 2)]:"");    
+            scrambele += (l == 1 ? 'brul'[i] + " '"[0 | Math.floor(Math.random() * 2)] : "");
         }
         return scrambele;
     }

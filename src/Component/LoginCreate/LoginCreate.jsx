@@ -11,7 +11,6 @@ import _square1 from "../../assets/square1.svg"
 
 
 const LoginCreate = (props) => {
-    const [inputValue, setInputValue] = React.useState("");
 
 
     const makeRoomId = (length) => {
@@ -45,18 +44,18 @@ const LoginCreate = (props) => {
                     </div>
                     {props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
-                        <input type="text" placeholder="eg. Zoks" maxLength="8" onChange={(e) => setInputValue(e.target.value)} />
+                        <input type="text" placeholder="eg. Zoks" maxLength="8" onChange={(e) => props.setNickname(e.target.value)} />
                         <label htmlFor="">Room Code</label>
                         <input type="text" placeholder="eg. 01344122" maxLength="8" onChange={(e) => props.setRoomInputValue(e.target.value)} />
                         <button className="join-btn" onClick={(e) => {
                             e.preventDefault();
                             props.setIsJoinedPlayers(true);
-                            props.socket.emit('join', inputValue, props.roomInputValue, "3x3"); // makeRoomId();
+                            props.socket.emit('join', props.nickname, props.roomInputValue, "3x3"); // makeRoomId();
                         }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                     {!props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
-                        <input type="text" placeholder="eg. Zoks" onChange={(e) => setInputValue(e.target.value)} />
+                        <input type="text" placeholder="eg. Zoks" onChange={(e) => props.setNickname(e.target.value)} />
                         <label htmlFor="">Puzzle <span className="selected-puzzle-label">(3x3)</span></label>
                         <div className="puzzle-buttons">
                             <button className="puzzle-button">

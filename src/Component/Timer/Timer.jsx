@@ -2,7 +2,6 @@ import './Timer.scss';
 import Sidebar from './Sidebar';
 import React from 'react';
 
-import generateScramble from './GenerateScramble';
 
 let isSpace = false;
 let currentTime = 0;
@@ -17,7 +16,7 @@ const Timer = (props) => {
   const [ao5, setAo5] = React.useState(-1);
   const [ao12, setAo12] = React.useState(-1);
 
-  const [currentScramble, setCurrentScramble] = React.useState(generateScramble("3x3"));
+  const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
   const [sidebarTimesArray, setSidebarTimesArray] = React.useState([]);
 
 
@@ -30,6 +29,11 @@ const Timer = (props) => {
   // stopwatch
   const [isRunning, setIsRunning] = React.useState(false);
   const [elapsedTime, setElapsedTime] = React.useState(0);
+
+
+  props.socket.on("setScramble", (scramble) => {
+    setCurrentScramble(scramble);
+  })
 
 
   // stopwatch logic and useEffect
@@ -77,8 +81,8 @@ const Timer = (props) => {
       ao12temp = ao12temp / 12;
       setAo12(ao12temp);
     }
-    console.log(times)
-    setCurrentScramble(generateScramble("3x3"));
+    console.log(times);
+    // new scramble
     addNewRoundObject();
   };
 
@@ -161,17 +165,15 @@ const Timer = (props) => {
   const addNewRoundObject = () => {
     console.log("New round array added...")
     let x = sidebarTimesArray;
-    x.push([{round: currentRound, playerName: props.username, playerTime: currentTime}])
+    x.push([{ round: currentRound, playerName: props.nickname, playerTime: currentTime }])
     setSidebarTimesArray(x);
     currentRound++;
     console.log(sidebarTimesArray)
-  
   }
-
 
   return (
     <div className="timer-container">
-      < Sidebar username={props.username} sidebarTimesArray={sidebarTimesArray} currentRound={currentRound} formatTime={formatTime}/>
+      < Sidebar username={props.nickname} sidebarTimesArray={sidebarTimesArray} currentRound={currentRound} formatTime={formatTime} />
       <div className="timer-top">
         <p className="timer-container-puzzle-label">3x3</p>
         <p className="timer-container-scramble">{currentScramble}</p>

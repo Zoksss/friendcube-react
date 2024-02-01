@@ -19,8 +19,13 @@ function App() {
 
   const [roomInputValue, setRoomInputValue] = React.useState("");
   // eslint-disable-next-line
-  const [username, setUsername] = React.useState("Zoksss");
+  const [nickname, setNickname] = React.useState("");
 
+
+  socket.on("startGame", () => {
+    setIsJoinedPlayers(false);
+    setIsTimerScreen(true);
+  })
 
 
   return (
@@ -33,6 +38,8 @@ function App() {
           setIsJoinedPlayers={setIsJoinedPlayers}
           setRoomInputValue={setRoomInputValue}
           roomInputValue={roomInputValue}
+          setNickname={setNickname}
+          nickname={nickname}
         />}
       {isJoinedPlayers &&
         < JoinedPlayers
@@ -40,8 +47,12 @@ function App() {
           setIsJoinedPlayers={setIsJoinedPlayers}
           setIsTimerScreen={setIsTimerScreen}
           roomInputValue={roomInputValue}
+          nickname={nickname}
         />}
-      <Timer username={username} />
+      <Timer
+        socket={socket}
+        nickname={nickname}
+      />
     </div>
   );
 }
