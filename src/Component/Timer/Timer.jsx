@@ -13,6 +13,8 @@ const Timer = (props) => {
   const [timerColor, setTimerColor] = React.useState("white");
   const [times, setTimes] = React.useState([]);
 
+  const [isRoundReady, setIsRoundReady] = React.useState(true);
+
   const [ao5, setAo5] = React.useState(-1);
   const [ao12, setAo12] = React.useState(-1);
 
@@ -33,6 +35,10 @@ const Timer = (props) => {
 
   props.socket.on("setScramble", (scramble) => {
     setCurrentScramble(scramble);
+  })
+
+  props.socket.on("ready", () => {
+    setIsRoundReady(true);
   })
 
 
@@ -82,8 +88,18 @@ const Timer = (props) => {
       setAo12(ao12temp);
     }
     console.log(times);
+
     // new scramble
-    addNewRoundObject();
+    props.socket.emit("finalTime", {
+      roomCode: props.roomInputValue
+      , time: currentTime
+      , ao5: ao5
+      , ao12: ao12
+      , finishStatus: "finished" // finished, dnf, plus2, x
+    });
+
+    setIsRoundReady(false);
+    setCurrentScramble("Waiting for others to finish...")
   };
 
   const resetStopwatch = () => {
@@ -127,6 +143,7 @@ const Timer = (props) => {
           // Clear the hold timeout since the spacebar has been released
           clearTimeout(holdTimeout);
           setIsSpaceHeld(false);
+          
         }
       }
     };
@@ -144,9 +161,11 @@ const Timer = (props) => {
     };
 
     const spaceHolded = () => {
-      isSpace = true;
       console.log('Space holded');
-      setTimerColor("green")
+      if (isRoundReady) {
+        isSpace = true;
+        setTimerColor("green")
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -162,14 +181,38 @@ const Timer = (props) => {
 
   // sidebar rounds logic
 
+
   const addNewRoundObject = () => {
     console.log("New round array added...")
-    let x = sidebarTimesArray;
-    x.push([{ round: currentRound, playerName: props.nickname, playerTime: currentTime }])
-    setSidebarTimesArray(x);
     currentRound++;
-    console.log(sidebarTimesArray)
+    addArrayToSidebar({ round: currentRound, playerName: props.nickname, playerTime: currentTime })
   }
+
+  props.socket.on("timeGetFromSocket", (data) => {
+    let socketName = data.socketName;
+    let time = data.stime;
+    let ao5 = data.ao5;
+    let ao12 = data.ao12;
+    let finishStatus = data.finishStatus;
+
+    console.log(currentRound);
+    addArrayToSidebar({ round: data.round, playerName: socketName, playerTime: time })
+  });
+
+  const addArrayToSidebar = (data) => {
+    console.log("round" + data.round)
+    let x = sidebarTimesArray;
+    if (x[data.round]) for (let i = 0; i < x[data.round].length; i++) if(JSON.stringify(data) === JSON.stringify(x[data.round][i])) return;
+    if (!x[data.round]) x[data.round] = [];
+    console.log(x[data.round])
+    x[data.round].push(data);
+    console.log("x = ", x)
+    setSidebarTimesArray(x);
+    console.log(sidebarTimesArray)
+
+  }
+
+
 
   return (
     <div className="timer-container">

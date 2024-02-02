@@ -52,6 +52,7 @@ function App() {
       <Timer
         socket={socket}
         nickname={nickname}
+        roomInputValue={roomInputValue}
       />
     </div>
   );

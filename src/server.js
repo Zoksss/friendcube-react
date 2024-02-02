@@ -15,6 +15,7 @@ class Room {
         this.leader = leader;
         this.puzzle = puzzle;
         this.isLocked = false;
+        this.round = 0;
         this.sockets = [{ socketId: leader, isFinished: true }];
     }
     addSocket(socket) {
@@ -85,15 +86,18 @@ io.on("connection", (socket) => {
         io.in(roomCode).emit("startGame");
     });
 
+    let counter = 0;
     socket.on("finalTime", (data) => {
+        console.log(counter++)
         if (!rooms[data.roomCode]) return;
         let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
         if (!socketObjectInRoom) return;
-        io.in(data.roomCode).emit("timeGetFromSocket", ({ socketName: socket.nickname, stime: data.time, ao5: data.ao5, ao12: data.ao12, finishStatus: data.finishStatus }));
+        io.in(data.roomCode).emit("timeGetFromSocket", ({ socketName: socket.nickname,round: rooms[data.roomCode].round, stime: data.time, ao5: data.ao5, ao12: data.ao12, finishStatus: data.finishStatus }));
         socketObjectInRoom.isFinished = true;
 
         if (!isEveryoneFinished(data.roomCode)) return;
-        io.in(data.roomCode).emit("ready");
+        rooms[data.roomCode].round++;
+        io.in(data.roomCode).emit("ready", rooms[data.roomCode].round);
         for (let i = 0; i < rooms[data.roomCode].sockets.length; i++)
             rooms[data.roomCode].sockets[i].isFinished = false;
 
