@@ -143,7 +143,7 @@ const Timer = (props) => {
           // Clear the hold timeout since the spacebar has been released
           clearTimeout(holdTimeout);
           setIsSpaceHeld(false);
-          
+
         }
       }
     };
@@ -189,6 +189,7 @@ const Timer = (props) => {
   }
 
   props.socket.on("timeGetFromSocket", (data) => {
+    //console.log(data)
     let socketName = data.socketName;
     let time = data.stime;
     let ao5 = data.ao5;
@@ -199,17 +200,26 @@ const Timer = (props) => {
     addArrayToSidebar({ round: data.round, playerName: socketName, playerTime: time })
   });
 
+
+  /*
   const addArrayToSidebar = (data) => {
-    console.log("round" + data.round)
     let x = sidebarTimesArray;
     if (x[data.round]) for (let i = 0; i < x[data.round].length; i++) if(JSON.stringify(data) === JSON.stringify(x[data.round][i])) return;
-    if (!x[data.round]) x[data.round] = [];
-    console.log(x[data.round])
+    if (x[data.round]!=[]) x[data.round] = [];
     x[data.round].push(data);
-    console.log("x = ", x)
     setSidebarTimesArray(x);
     console.log(sidebarTimesArray)
+  }
+  */
 
+  const addArrayToSidebar = (data) => {
+    let x = sidebarTimesArray;
+    if (x[data.round]) for (let i = 0; i < x[data.round].length; i++) if (JSON.stringify(data) === JSON.stringify(x[data.round][i])) return;
+    if (x[data.round] !== "object") x[data.round] = new Array(data);
+    else x[data.round].push(data);
+    //setSidebarTimesArray(x);
+   // console.log(x[data.round])
+    console.log(x[data.round])
   }
 
 
