@@ -19,7 +19,6 @@ const Timer = (props) => {
   const [ao12, setAo12] = React.useState(-1);
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
-  const [sidebarTimesArray, setSidebarTimesArray] = React.useState([]);
 
 
   // space handler
@@ -185,7 +184,7 @@ const Timer = (props) => {
   const addNewRoundObject = () => {
     console.log("New round array added...")
     currentRound++;
-    addArrayToSidebar({ round: currentRound, playerName: props.nickname, playerTime: currentTime })
+    //addArrayToSidebar({ round: currentRound, playerName: props.nickname, playerTime: currentTime })
   }
 
   props.socket.on("timeGetFromSocket", (data) => {
@@ -197,36 +196,13 @@ const Timer = (props) => {
     let finishStatus = data.finishStatus;
 
     console.log(currentRound);
-    addArrayToSidebar({ round: data.round, playerName: socketName, playerTime: time })
+    //addArrayToSidebar({ round: data.round, playerName: socketName, playerTime: time })
   });
-
-
-  /*
-  const addArrayToSidebar = (data) => {
-    let x = sidebarTimesArray;
-    if (x[data.round]) for (let i = 0; i < x[data.round].length; i++) if(JSON.stringify(data) === JSON.stringify(x[data.round][i])) return;
-    if (x[data.round]!=[]) x[data.round] = [];
-    x[data.round].push(data);
-    setSidebarTimesArray(x);
-    console.log(sidebarTimesArray)
-  }
-  */
-
-  const addArrayToSidebar = (data) => {
-    let x = sidebarTimesArray;
-    if (x[data.round]) for (let i = 0; i < x[data.round].length; i++) if (JSON.stringify(data) === JSON.stringify(x[data.round][i])) return;
-    if (x[data.round] !== "object") x[data.round] = new Array(data);
-    else x[data.round].push(data);
-    //setSidebarTimesArray(x);
-   // console.log(x[data.round])
-    console.log(x[data.round])
-  }
-
 
 
   return (
     <div className="timer-container">
-      < Sidebar username={props.nickname} sidebarTimesArray={sidebarTimesArray} currentRound={currentRound} formatTime={formatTime} />
+      < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady}/>
       <div className="timer-top">
         <p className="timer-container-puzzle-label">3x3</p>
         <p className="timer-container-scramble">{currentScramble}</p>
@@ -240,7 +216,7 @@ const Timer = (props) => {
       </div>
       <div className="timer-container-opponet">
         <div className="opponet-time">
-          <p className="opponet-nickname">damjan311</p>
+          <p className="oppofnet-nickname">damjan311</p>
           <p className="opponet-time">25.09</p>
         </div>
         <div className="opponet-avg">

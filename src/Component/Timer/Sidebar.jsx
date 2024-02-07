@@ -5,11 +5,18 @@ import Players from "../../assets/players.svg"
 import Settings from "../../assets/settings.svg"
 import Stacks from "../../assets/stack.svg"
 
+import React from 'react';
+
 
 const Sidebar = (props) => {
 
-    const timesListed = (props.sidebarTimesArray.length === 0)?"":props.sidebarTimesArray.map((playerObjectArr, i) =>< SidebarTime key={i}playerName={playerObjectArr[0].playerName} playerTime={playerObjectArr[0].playerTime} currentRound={playerObjectArr[0].round} formatTime={props.formatTime}/>)
+    const [sidebarUI, setSidebarUI] = React.useState([]);
 
+    const timesListed = sidebarUI.map((timeObj, i) => (timeObj.playerTime === -1) ? <div key={i} className="sidebar-round"><p>#{timeObj.round}</p></div> : <SidebarTime key={i} playerName={timeObj.playerName} playerTime={timeObj.playerTime} formatTime={props.formatTime} />)
+
+    props.socket.on("timeGetFromSocket", (timesArrayFromSrv) => {
+        setSidebarUI(timesArrayFromSrv);
+    })
 
     return (
         <div className="sidebar">
@@ -27,3 +34,4 @@ const Sidebar = (props) => {
 }
 
 export default Sidebar;
+

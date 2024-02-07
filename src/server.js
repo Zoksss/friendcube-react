@@ -15,8 +15,9 @@ class Room {
         this.leader = leader;
         this.puzzle = puzzle;
         this.isLocked = false;
-        this.round = 0;
+        this.round = 1;
         this.sockets = [{ socketId: leader, isFinished: true }];
+        this.timesArray = [{ round: 1, playerName: "", playerTime: -1 }];
     }
     addSocket(socket) {
         this.sockets.push({ socketId: socket.id, isFinished: true });
@@ -86,13 +87,12 @@ io.on("connection", (socket) => {
         io.in(roomCode).emit("startGame");
     });
 
-    let counter = 0;
     socket.on("finalTime", (data) => {
-        console.log(counter++)
         if (!rooms[data.roomCode]) return;
         let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
         if (!socketObjectInRoom) return;
-        io.in(data.roomCode).emit("timeGetFromSocket", ({ socketName: socket.nickname,round: rooms[data.roomCode].round, stime: data.time, ao5: data.ao5, ao12: data.ao12, finishStatus: data.finishStatus }));
+        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: socket.nickname, playerTime: data.time });
+        io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 
         if (!isEveryoneFinished(data.roomCode)) return;
@@ -101,6 +101,7 @@ io.on("connection", (socket) => {
         for (let i = 0; i < rooms[data.roomCode].sockets.length; i++)
             rooms[data.roomCode].sockets[i].isFinished = false;
 
+        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
         io.in(data.roomCode).emit("setScramble", generateScramble(rooms[data.roomCode].puzzle));
 
     });
