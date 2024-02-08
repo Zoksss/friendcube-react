@@ -54,7 +54,7 @@ function App() {
         nickname={nickname}
         roomInputValue={roomInputValue}
       />
-    </div>
+    </div >
   );
 }
 

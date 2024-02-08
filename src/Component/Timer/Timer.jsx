@@ -1,6 +1,7 @@
 import './Timer.scss';
 import Sidebar from './Sidebar';
 import React from 'react';
+import FinishedScreen from '../FinishedScreen/FinishedScreen';
 
 
 let isSpace = false;
@@ -19,6 +20,8 @@ const Timer = (props) => {
   const [ao12, setAo12] = React.useState(-1);
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
+  const [finishStatus, setfinishStatus] = React.useState("finished")
+  const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false)
 
 
   // space handler
@@ -89,17 +92,23 @@ const Timer = (props) => {
     console.log(times);
 
     // new scramble
-    props.socket.emit("finalTime", {
-      roomCode: props.roomInputValue
-      , time: currentTime
-      , ao5: ao5
-      , ao12: ao12
-      , finishStatus: "finished" // finished, dnf, plus2, x
-    });
-
-    setIsRoundReady(false);
-    setCurrentScramble("Waiting for others to finish...")
+    setIsFinishStatusScreen(true);
   };
+
+  const fireTimeToServer = () => {
+    if (finishStatus !== "x") {
+      props.socket.emit("finalTime", {
+        roomCode: props.roomInputValue
+        , time: currentTime
+        , ao5: ao5
+        , ao12: ao12
+        , finishStatus: finishStatus // finished, dnf, plus2, x
+      });
+
+      setIsRoundReady(false);
+      setCurrentScramble("Waiting for others to finish...")
+    }
+  }
 
   const resetStopwatch = () => {
     setElapsedTime(0);
@@ -134,19 +143,14 @@ const Timer = (props) => {
     const handleKeyUp = (event) => {
       if (event.code === 'Space') {
         if (isSpaceHeld) {
-          if (isSpace) {
-            startStopwatch();
-            //setIsSpace(false);
-          }
+          if (isSpace) startStopwatch();
           spaceDepressed();
-          // Clear the hold timeout since the spacebar has been released
           clearTimeout(holdTimeout);
           setIsSpaceHeld(false);
 
         }
       }
     };
-
 
     const spacePressed = () => {
       console.log('Space pressed');
@@ -178,53 +182,34 @@ const Timer = (props) => {
   }, [holdTimeout, isSpaceHeld]);
 
 
-  // sidebar rounds logic
-
-
-  const addNewRoundObject = () => {
-    console.log("New round array added...")
-    currentRound++;
-    //addArrayToSidebar({ round: currentRound, playerName: props.nickname, playerTime: currentTime })
-  }
-
-  props.socket.on("timeGetFromSocket", (data) => {
-    //console.log(data)
-    let socketName = data.socketName;
-    let time = data.stime;
-    let ao5 = data.ao5;
-    let ao12 = data.ao12;
-    let finishStatus = data.finishStatus;
-
-    console.log(currentRound);
-    //addArrayToSidebar({ round: data.round, playerName: socketName, playerTime: time })
-  });
-
-
   return (
-    <div className="timer-container">
-      < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady}/>
-      <div className="timer-top">
-        <p className="timer-container-puzzle-label">3x3</p>
-        <p className="timer-container-scramble">{currentScramble}</p>
-      </div>
-      <div className="timer-container-center">
-        <p className="time" style={{ color: `${timerColor}` }}>{formatTime(elapsedTime)}</p>
-        <div className="timers-avg">
-          <p className="ao5">ao5: {ao5 !== -1 ? formatTime(ao5) : "na"}</p>
-          <p className="ao12">ao12: {ao12 !== -1 ? formatTime(ao12) : "na"}</p>
+    <>
+      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} setfinishStatus={setfinishStatus} fireTimeToServer={fireTimeToServer} />}
+      <div className="timer-container">
+        < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady} />
+        <div className="timer-top">
+          <p className="timer-container-puzzle-label">3x3</p>
+          <p className="timer-container-scramble">{currentScramble}</p>
+        </div>
+        <div className="timer-container-center">
+          <p className="time" style={{ color: `${timerColor}` }}>{formatTime(elapsedTime)}</p>
+          <div className="timers-avg">
+            <p className="ao5">ao5: {ao5 !== -1 ? formatTime(ao5) : "na"}</p>
+            <p className="ao12">ao12: {ao12 !== -1 ? formatTime(ao12) : "na"}</p>
+          </div>
+        </div>
+        <div className="timer-container-opponet">
+          <div className="opponet-time">
+            <p className="oppofnet-nickname">damjan311</p>
+            <p className="opponet-time">25.09</p>
+          </div>
+          <div className="opponet-avg">
+            <p className="opponet-ao5">ao5: 41.25</p>
+            <p className="opponet-ao12">ao12: 37.19</p>
+          </div>
         </div>
       </div>
-      <div className="timer-container-opponet">
-        <div className="opponet-time">
-          <p className="oppofnet-nickname">damjan311</p>
-          <p className="opponet-time">25.09</p>
-        </div>
-        <div className="opponet-avg">
-          <p className="opponet-ao5">ao5: 41.25</p>
-          <p className="opponet-ao12">ao12: 37.19</p>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 
