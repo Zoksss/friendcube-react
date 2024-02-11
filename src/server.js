@@ -91,7 +91,14 @@ io.on("connection", (socket) => {
         if (!rooms[data.roomCode]) return;
         let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
         if (!socketObjectInRoom) return;
-        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: socket.nickname, playerTime: data.time });
+
+
+        let time = data.playerTime;
+        if (data.finishedStatus === "plus2") {
+            time += 2000;
+        }
+
+        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: socket.nickname, playerTime: time, finishedStatus: data.finishedStatus });
         io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 
@@ -101,7 +108,7 @@ io.on("connection", (socket) => {
         for (let i = 0; i < rooms[data.roomCode].sockets.length; i++)
             rooms[data.roomCode].sockets[i].isFinished = false;
 
-        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
+        rooms[data.roomCode].timesArray.unshift({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
         io.in(data.roomCode).emit("setScramble", generateScramble(rooms[data.roomCode].puzzle));
 
     });

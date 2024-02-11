@@ -7,6 +7,7 @@ import FinishedScreen from '../FinishedScreen/FinishedScreen';
 let isSpace = false;
 let currentTime = 0;
 let currentRound = 1;
+let finishStatus = "finished"
 
 const Timer = (props) => {
 
@@ -20,7 +21,6 @@ const Timer = (props) => {
   const [ao12, setAo12] = React.useState(-1);
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
-  const [finishStatus, setfinishStatus] = React.useState("finished")
   const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false)
 
 
@@ -72,39 +72,60 @@ const Timer = (props) => {
 
   const stopStopwatch = () => {
     setIsRunning(false);
-    let x = times;       // pushing new time inside of times[] array
-    x.unshift(currentTime);
-    if (times.length >= 13) times.pop();
-    setTimes(x);
-
-    if (times.length > 4) {
-      let ao5temp = 0;
-      for (let i = 0; i < 5; i++)  ao5temp += times[i];
-      ao5temp = ao5temp / 5;
-      setAo5(ao5temp);
-    }
-    if (times.length > 11) {
-      let ao12temp = 0;
-      for (let i = 0; i < 12; i++)ao12temp += times[i];
-      ao12temp = ao12temp / 12;
-      setAo12(ao12temp);
-    }
-    console.log(times);
-
     // new scramble
     setIsFinishStatusScreen(true);
   };
 
-  const fireTimeToServer = () => {
-    if (finishStatus !== "x") {
+  const calculateAvgs = (currentFinishedStatus) => {    // calculate and if dnf set dnf
+
+    let x = times;       // pushing new time inside of times[] array
+    if (currentFinishedStatus === "dnf") currentTime = "dnf"
+    else if (currentFinishedStatus === "plus2") currentTime += 2000;
+
+    x.unshift(currentTime);
+    if (times.length >= 13) times.pop();
+    setTimes(x);
+
+    // eslint-disable-next-line
+    ao12Start: if (times.length >= 5) {
+      let ao5temp = 0;
+      for (let i = 0; i < 5; i++) {
+        if (times[i] === "dnf") {
+          setAo5("dnf");
+          // eslint-disable-next-line
+          break ao12Start;
+        }
+        ao5temp += times[i];
+      }
+
+      ao5temp = ao5temp / 5;
+      setAo5(ao5temp);
+    }
+    if (times.length >= 12) {
+      let ao12temp = 0;
+      for (let i = 0; i < 12; i++) {
+        if (times[i] === "dnf") {
+          setAo12("dnf");
+          return;
+        }
+        ao12temp += times[i];
+      }
+      ao12temp = ao12temp / 12;
+      setAo12(ao12temp);
+    }
+    console.log(times);
+  }
+
+  const fireTimeToServer = (currentFinishedStatus) => {
+    calculateAvgs(currentFinishedStatus);
+    if (currentFinishedStatus !== "x") {
       props.socket.emit("finalTime", {
         roomCode: props.roomInputValue
-        , time: currentTime
+        , playerTime: currentTime
         , ao5: ao5
         , ao12: ao12
-        , finishStatus: finishStatus // finished, dnf, plus2, x
+        , finishedStatus: currentFinishedStatus // finished, dnf, plus2, x
       });
-
       setIsRoundReady(false);
       setCurrentScramble("Waiting for others to finish...")
     }
@@ -184,7 +205,7 @@ const Timer = (props) => {
 
   return (
     <>
-      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} setfinishStatus={setfinishStatus} fireTimeToServer={fireTimeToServer} />}
+      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
       <div className="timer-container">
         < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady} />
         <div className="timer-top">
@@ -194,8 +215,8 @@ const Timer = (props) => {
         <div className="timer-container-center">
           <p className="time" style={{ color: `${timerColor}` }}>{formatTime(elapsedTime)}</p>
           <div className="timers-avg">
-            <p className="ao5">ao5: {ao5 !== -1 ? formatTime(ao5) : "na"}</p>
-            <p className="ao12">ao12: {ao12 !== -1 ? formatTime(ao12) : "na"}</p>
+            <p className="ao5">ao5: {ao5 !== -1 ? ao5 !== "dnf" ? formatTime(ao5) : "DNF" : "--:--"}</p>
+            <p className="ao12">ao12: {ao12 !== -1 ? ao12 !== "dnf" ? formatTime(ao12) : "DNF" : "--:--"}</p>
           </div>
         </div>
         <div className="timer-container-opponet">

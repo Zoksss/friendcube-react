@@ -5,11 +5,11 @@ const FinishedScreen = (props) => {
     return (
         <div className="finished-screen">
             <div className="finished-screen-container">
-                <button onClick={() => { props.setfinishStatus("finished"); props.setIsFinishStatusScreen(false); props.fireTimeToServer() }}>FINISHED</button>
+                <button onClick={() => { props.setIsFinishStatusScreen(false); props.fireTimeToServer("finished");}}>FINISHED</button>
                 <div className="finished-screen-bottom-row">
-                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setfinishStatus("dnf"); props.setIsFinishStatusScreen(false); props.fireTimeToServer() }}>DNF</button>
-                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setfinishStatus("+2"); props.setIsFinishStatusScreen(false); props.fireTimeToServer() }}>+2</button>
-                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setfinishStatus("x"); props.setIsFinishStatusScreen(false); props.fireTimeToServer() }}>x</button>
+                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setIsFinishStatusScreen(false); props.fireTimeToServer("dnf") }}>DNF</button>
+                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setIsFinishStatusScreen(false); props.fireTimeToServer("plus2") }}>+2</button>
+                    <button className="finished-screen-bottom-row-btn" onClick={() => { props.setIsFinishStatusScreen(false); props.fireTimeToServer("x") }}>x</button>
                 </div>
             </div>
         </div>
