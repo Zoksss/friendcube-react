@@ -147,3 +147,30 @@
         }
     }
 }
+
+
+
+@media only screen and (max-width: 576px) {
+    .timer-container{
+        padding: 0 20px;
+    }
+    .timer-container-scramble{
+        font-size: 24px !important;
+    }
+    .timer-container-opponet{
+        top:70% !important;
+    }
+    .sidebar{
+        width: 100% !important;
+    }
+    .sidebar-buttons-container{
+        width: 100%;
+        padding: 0 20vw;
+    }
+    .time{
+        font-size: 80px !important;
+    }
+    .ao5, .ao12{
+        font-size: 24px !important;
+    }
+  }

@@ -1,4 +1,4 @@
-.joined-players-container {
+.settings-screen-container {
     background-color: rgba(0, 0, 0, 0.758);
     position: absolute;
     top: 0;
@@ -9,9 +9,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    .joined-players-card {
-        width: 400px;
+    .settings-screen-card {
+        width: 510px;
         height: auto;
         min-height: 500px;
         background-color: #201e1f;
@@ -21,7 +20,7 @@
         text-align: left;
         padding: 30px 40px 18px 40px;
         position: relative;
-        .joined-players-title {
+        .settings-screen-title {
             color: #ee6c4d;
             font-size: 24px;
             padding: 20px 15px;
@@ -31,47 +30,49 @@
             justify-content: space-between;
             align-items: center;
             background-color: #443e3e;
-            .joined-players-roomcode{
-                color: #ffffff;
-                font-weight: 700;
-                font-size: 28px;
-            }
         }
-        .players-wrapper {
+        .settings-wrapper {
             width: 100%;
             margin-top: 15px;
             min-height: 140px;
-            .player {
+
+            .settings-timer-delay {
                 display: flex;
                 justify-content: space-between;
-                font-size: 20px;
-                margin: 15px 0;
-            }
-            .leader {
-                color: #ee6c4d;
-            }
-        }
-        .joined-players-buttons {
-            margin-top: 100px;
-            width: 100%;
-            .joinedplayers-waitingforleader{
-                font-size: 22px;
-                font-weight: 600;
-                text-align: center;
-            }
-            .start-btn {
-                background-color: #ee6c4d;
-                font-size: 24px;
-                width: 100%;
-                padding: 15px 0;
-                color: white;
-                font-weight: 600;
-                border: none;
-                transition: 150ms all ease;
-                &:hover {
-                    transform: scale(1.05);
+                height: 50px;
+                margin-top: 15px;
+                p {
+                    font-size: 24px;
+                    color: white;
                 }
             }
+
+            .settings-theme {
+                margin-top: 15px;
+                p {
+                    font-size: 24px;
+                    color: white;
+                }
+            }
+
+            .themes-buttons-container {
+                margin-top: 15px;
+                button {
+                    margin-right: 16px;
+                    background-color: transparent;
+                    border: none;
+                }
+                img {
+                    width: 90px;
+                    height: 90px;
+                    border: 2px solid white;
+                }
+            }
+        }
+        .settings-screen-buttons {
+            margin-top: 100px;
+            width: 100%;
+
             .cancel-btn {
                 background-color: transparent;
                 font-size: 22px;
@@ -90,14 +91,3 @@
         }
     }
 }
-
-
-@media only screen and (max-width: 376px) {
-    .joined-players-card{
-        padding: 30px 15px 18px 15px !important;
-        font-size: 20px !important;
-    }
-    .joined-players-roomcode, .joined-players-title{
-        font-size: 20px !important;
-    }
-  }

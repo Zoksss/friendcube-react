@@ -2,6 +2,7 @@ import './Timer.scss';
 import Sidebar from './Sidebar';
 import React from 'react';
 import FinishedScreen from '../FinishedScreen/FinishedScreen';
+import SettingsScreen from '../SettingsScreen/SettingsScreen';
 
 
 let isSpace = false;
@@ -27,6 +28,8 @@ const Timer = (props) => {
   // space handler
   const [holdTimeout, setHoldTimeout] = React.useState(null);
   const [isSpaceHeld, setIsSpaceHeld] = React.useState(false);
+
+  const [isHidden, setIsHidden] = React.useState(false);
 
 
 
@@ -66,11 +69,13 @@ const Timer = (props) => {
 
   const startStopwatch = () => {
     resetStopwatch()
+    setIsHidden(true);
     setIsRunning(true);
     isSpace = false;
   };
 
   const stopStopwatch = () => {
+    setIsHidden(false);
     setIsRunning(false);
     // new scramble
     setIsFinishStatusScreen(true);
@@ -203,32 +208,37 @@ const Timer = (props) => {
   }, [holdTimeout, isSpaceHeld]);
 
 
+  //  <SettingsScreen />
   return (
     <>
+     
       {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
       <div className="timer-container">
-        < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady} />
-        <div className="timer-top">
+        {!isHidden && < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady} />}
+        {!isHidden && <div className="timer-top">
           <p className="timer-container-puzzle-label">3x3</p>
           <p className="timer-container-scramble">{currentScramble}</p>
         </div>
+        }
         <div className="timer-container-center">
           <p className="time" style={{ color: `${timerColor}` }}>{formatTime(elapsedTime)}</p>
-          <div className="timers-avg">
+          {!isHidden && <div className="timers-avg">
             <p className="ao5">ao5: {ao5 !== -1 ? ao5 !== "dnf" ? formatTime(ao5) : "DNF" : "--:--"}</p>
             <p className="ao12">ao12: {ao12 !== -1 ? ao12 !== "dnf" ? formatTime(ao12) : "DNF" : "--:--"}</p>
-          </div>
+          </div>}
         </div>
-        <div className="timer-container-opponet">
-          <div className="opponet-time">
-            <p className="oppofnet-nickname">damjan311</p>
-            <p className="opponet-time">25.09</p>
+        {!isHidden &&
+          <div className="timer-container-opponet">
+            <div className="opponet-time">
+              <p className="oppofnet-nickname">damjan311</p>
+              <p className="opponet-time">25.09</p>
+            </div>
+            <div className="opponet-avg">
+              <p className="opponet-ao5">ao5: 41.25</p>
+              <p className="opponet-ao12">ao12: 37.19</p>
+            </div>
           </div>
-          <div className="opponet-avg">
-            <p className="opponet-ao5">ao5: 41.25</p>
-            <p className="opponet-ao12">ao12: 37.19</p>
-          </div>
-        </div>
+        }
       </div>
     </>
   );

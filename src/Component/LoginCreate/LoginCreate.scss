@@ -153,3 +153,16 @@
     }
 }
 
+
+
+@media only screen and (max-width: 576px) {
+    .logincreate-container {
+        flex-direction: column-reverse !important;
+    }
+    .login-create-input{
+        width: 100% !important;
+    }
+    .login-info {
+        width: 100% !important;
+    }
+  }
