@@ -17,12 +17,15 @@ const Timer = (props) => {
   const [times, setTimes] = React.useState([]);
 
   const [isRoundReady, setIsRoundReady] = React.useState(true);
+  
+  const [timerDelay, setTimerDelay] = React.useState(1000);
 
   const [ao5, setAo5] = React.useState(-1);
   const [ao12, setAo12] = React.useState(-1);
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
-  const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false)
+  const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false);
+  const [isSettingScreen, setIsSettingsScreen] = React.useState(true);
 
 
   // space handler
@@ -30,6 +33,12 @@ const Timer = (props) => {
   const [isSpaceHeld, setIsSpaceHeld] = React.useState(false);
 
   const [isHidden, setIsHidden] = React.useState(false);
+
+  const [currentTheme, setCurrentTheme] = React.useState({
+    primary: "#201e1f",
+    secondary: "#ffffff",
+    accent: "#a23cfa"
+  })
 
 
 
@@ -162,7 +171,7 @@ const Timer = (props) => {
       if (event.code === 'Space' && !isSpaceHeld) {
         spacePressed();
         setIsSpaceHeld(true);
-        setHoldTimeout(setTimeout(spaceHolded, 1000));
+        setHoldTimeout(setTimeout(spaceHolded, timerDelay));
       }
     };
 
@@ -208,15 +217,24 @@ const Timer = (props) => {
   }, [holdTimeout, isSpaceHeld]);
 
 
-  //  <SettingsScreen />
+  //  {isSettingScreen && <SettingsScreen setisSettingScreen={setisSettingScreen}/> }
   return (
     <>
-     
-      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
+      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay}/> }
+      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} currentTheme={currentTheme}/>}
       <div className="timer-container">
-        {!isHidden && < Sidebar username={props.nickname} currentRound={currentRound} formatTime={formatTime} socket={props.socket} isRoundReady={isRoundReady} />}
+        {!isHidden && < Sidebar
+          username={props.nickname}
+          currentRound={currentRound}
+          formatTime={formatTime}
+          socket={props.socket}
+          isRoundReady={isRoundReady}
+          setIsSettingsScreen={setIsSettingsScreen}
+          isSettingScreen={isSettingScreen}
+          currentTheme={currentTheme}
+        />}
         {!isHidden && <div className="timer-top">
-          <p className="timer-container-puzzle-label">3x3</p>
+          <p className="timer-container-puzzle-label" style={{color: currentTheme.accent}}>3x3</p>
           <p className="timer-container-scramble">{currentScramble}</p>
         </div>
         }
@@ -230,12 +248,12 @@ const Timer = (props) => {
         {!isHidden &&
           <div className="timer-container-opponet">
             <div className="opponet-time">
-              <p className="oppofnet-nickname">damjan311</p>
-              <p className="opponet-time">25.09</p>
+              <p className="oppofnet-nickname" style={{color: currentTheme.accent}}>damjan311</p>
+              <p className="opponet-time" style={{color: currentTheme.accent}}>25.09</p>
             </div>
             <div className="opponet-avg">
-              <p className="opponet-ao5">ao5: 41.25</p>
-              <p className="opponet-ao12">ao12: 37.19</p>
+              <p className="opponet-ao5" style={{color: currentTheme.accent}}>ao5: 41.25</p>
+              <p className="opponet-ao12" style={{color: currentTheme.accent}}>ao12: 37.19</p>
             </div>
           </div>
         }

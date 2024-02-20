@@ -61,6 +61,11 @@
                     margin-right: 16px;
                     background-color: transparent;
                     border: none;
+                    transition: 100ms all ease;
+
+                    &:hover{
+                        transform: scale(1.07);
+                    }
                 }
                 img {
                     width: 90px;
@@ -90,4 +95,8 @@
             }
         }
     }
+}
+
+.active{
+    border: 2px solid #ee6c4d !important;
 }
