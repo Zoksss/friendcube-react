@@ -44,6 +44,7 @@ io.on("connection", (socket) => {
     online++;
     io.sockets.emit('onlineClientChange', online);
     socket.on("join", (nickname, roomCode, puzzle) => {
+        console.log("rumoko: " + roomCode)
         //if (validateInput(nickname, roomCode, puzzle)) {
         if (doesUsernameAlrdeyExists(nickname, roomCode)) {
             socket.emit("serverError", "Nickname alredy used in this room.");
@@ -84,7 +85,7 @@ io.on("connection", (socket) => {
             rooms[roomCode].sockets[i].isFinished = false;
 
         io.in(roomCode).emit("setScramble", generateScramble(rooms[roomCode].puzzle));
-        io.in(roomCode).emit("startGame");
+        io.in(roomCode).emit("startGame" , rooms[roomCode].puzzle);
     });
 
     socket.on("finalTime", (data) => {
@@ -114,8 +115,10 @@ io.on("connection", (socket) => {
     });
 
     socket.on('disconnecting', () => {
+        console.log("socket disconnecting")
         let roomNames = Object.keys(socket.rooms);
-        console.log(roomNames);
+        //console.log(roomNames);
+        console.log(rooms);
         for (let i = 0; i < roomNames.length; i++) {
             if (!roomNames[i] === socket.id) continue;
             if (!rooms[roomNames[i]]) return;
@@ -159,7 +162,7 @@ const validateInput = (nickname, roomCode, puzzle) => {
     if (nickname.length < 3) return false;
     if (roomCode.length != 8) return false;
     for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false;
-    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyra") return false;
+    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") return false;
     return true;
 }
 function isLetter(str) {
@@ -190,7 +193,7 @@ const generateScramble = (puzzle) => {
             for (; r == y; r = 'RUF'[0 | x() * 3]);
         return scrambele;
     }
-    else if (puzzle === "pyra") {
+    else if (puzzle === "pyraminx") {
         let scrambele = "";
         for (a = y = r = '', x = Math.random; a++ < 9; scrambele += (r + " '"[0 | x(y = r) * 2] + ' '))
             for (; r == y; r = 'BRUL'[0 | x() * 4]);

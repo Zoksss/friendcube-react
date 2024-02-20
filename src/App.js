@@ -20,11 +20,14 @@ function App() {
   const [roomInputValue, setRoomInputValue] = React.useState("");
   // eslint-disable-next-line
   const [nickname, setNickname] = React.useState("");
+  const [currentPuzzle, setCurrentPuzzle] = React.useState("3x3");
 
 
-  socket.on("startGame", () => {
+
+  socket.on("startGame", (puzzle) => {
     setIsJoinedPlayers(false);
     setIsTimerScreen(true);
+    setCurrentPuzzle(puzzle);
   })
 
 
@@ -53,6 +56,7 @@ function App() {
         socket={socket}
         nickname={nickname}
         roomInputValue={roomInputValue}
+        currentPuzzle={currentPuzzle}
       />
     </div >
   );

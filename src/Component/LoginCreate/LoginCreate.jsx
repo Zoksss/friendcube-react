@@ -12,6 +12,7 @@ import _square1 from "../../assets/square1.svg"
 
 const LoginCreate = (props) => {
 
+    const [selectedPuzzle, setSelectedPuzzle] = React.useState("3x3");
 
     const makeRoomId = (length) => {
         let result = '';
@@ -58,26 +59,32 @@ const LoginCreate = (props) => {
                         <input type="text" placeholder="eg. Zoks" onChange={(e) => props.setNickname(e.target.value)} />
                         <label htmlFor="">Puzzle <span className="selected-puzzle-label">(3x3)</span></label>
                         <div className="puzzle-buttons">
-                            <button className="puzzle-button">
+                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("2x2")}} className={`puzzle-button ${selectedPuzzle==="2x2"?"puzzle-button-active":""}`}>
                                 <img src={_2x2} alt="" />
                             </button>
-                            <button className="puzzle-button puzzle-button-active">
+                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("3x3")}} className={`puzzle-button ${selectedPuzzle==="3x3"?"puzzle-button-active":""}`}>
                                 <img src={_3x3} alt="" />
                             </button>
-                            <button className="puzzle-button">
+                            <button onClick={e => e.preventDefault()}className="puzzle-button puzzle-button-disabled">
                                 <img src={_4x4} alt="" />
                             </button>
-                            <button className="puzzle-button">
+                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("pyraminx")}} className={`puzzle-button ${selectedPuzzle==="pyraminx"?"puzzle-button-active":""}`}>
                                 <img src={_pyraminx} alt="" />
                             </button>
-                            <button className="puzzle-button">
+                            <button onClick={e => e.preventDefault()} className="puzzle-button puzzle-button-disabled">
                                 <img src={_megaminx} alt="" />
                             </button>
-                            <button className="puzzle-button">
+                            <button onClick={e => e.preventDefault()} className="puzzle-button puzzle-button-disabled">
                                 <img src={_square1} alt="" />
                             </button>
                         </div>
-                        <button className="join-btn" onClick={(e) => { e.preventDefault(); props.setIsJoinedPlayers(true) }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
+                        <button className="join-btn" onClick={(e) => { 
+                            e.preventDefault(); 
+                            props.setIsJoinedPlayers(true);
+                            let x = makeRoomId(8);
+                            props.setRoomInputValue(x );
+                            props.socket.emit('join', props.nickname, x , selectedPuzzle); 
+                            }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                 </div>
             </div>

@@ -20,9 +20,14 @@ const Sidebar = (props) => {
     })
 
     React.useEffect(() => {
-        const handleResize = () => { if (window.innerWidth >= 768) setIsSidebarVisible(true); }
+        const handleResize = () => {
+            if (window.innerWidth >= 768) setIsSidebarVisible(true);
+        };
+
         window.addEventListener('resize', handleResize);
-        return () => { window.removeEventListener('resize', handleResize) };
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
 
@@ -34,11 +39,12 @@ const Sidebar = (props) => {
             <div className="sidebar-buttons-container">
                 <div className="sidebar-buttons">
                     <div className="sidebar-buttons-top">
-                        <button onClick={() => (window.innerWidth < 768) ? setIsSidebarVisible(!isSidebarVisible) : ""} style={{ backgroundColor: isSidebarVisible ? "#616161" : props.currentTheme.accent }}><img src={Stacks} alt="" /></button>
-                        <button onClick={() => { props.setIsSettingsScreen(true) }} style={{ backgroundColor: props.isSettingScreen ? "#616161" : props.currentTheme.accent }}><img src={Settings} alt="" /></button>
-                        <button style={{ backgroundColor: props.currentTheme.accent }}><img src={Players} alt="" /></button>
+                        <button onClick={() => (window.innerWidth < 768) ? setIsSidebarVisible(!isSidebarVisible) : ""}
+                            style={{ backgroundColor: isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Stacks} alt="" /></button>
+                        <button onClick={() => { props.setIsSettingsScreen(true) }} style={{ backgroundColor: props.isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Settings} alt="" /></button>
+                        <button><img src={Players} alt="" /></button>
                     </div>
-                    <button className="leave-room-btn" style={{ color: props.currentTheme.accent }}>leave room</button>
+                    <button className="leave-room-btn">leave room</button>
                 </div>
             </div >
         </>

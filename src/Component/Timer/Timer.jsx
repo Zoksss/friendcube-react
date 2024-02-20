@@ -25,7 +25,7 @@ const Timer = (props) => {
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
   const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false);
-  const [isSettingScreen, setIsSettingsScreen] = React.useState(true);
+  const [isSettingScreen, setIsSettingsScreen] = React.useState(false);
 
 
   // space handler
@@ -33,12 +33,6 @@ const Timer = (props) => {
   const [isSpaceHeld, setIsSpaceHeld] = React.useState(false);
 
   const [isHidden, setIsHidden] = React.useState(false);
-
-  const [currentTheme, setCurrentTheme] = React.useState({
-    primary: "#201e1f",
-    secondary: "#ffffff",
-    accent: "#a23cfa"
-  })
 
 
 
@@ -220,8 +214,8 @@ const Timer = (props) => {
   //  {isSettingScreen && <SettingsScreen setisSettingScreen={setisSettingScreen}/> }
   return (
     <>
-      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay}/> }
-      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} currentTheme={currentTheme}/>}
+      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay}/>}
+      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
       <div className="timer-container">
         {!isHidden && < Sidebar
           username={props.nickname}
@@ -231,10 +225,9 @@ const Timer = (props) => {
           isRoundReady={isRoundReady}
           setIsSettingsScreen={setIsSettingsScreen}
           isSettingScreen={isSettingScreen}
-          currentTheme={currentTheme}
         />}
         {!isHidden && <div className="timer-top">
-          <p className="timer-container-puzzle-label" style={{color: currentTheme.accent}}>3x3</p>
+          <p className="timer-container-puzzle-label">{props.currentPuzzle}</p>
           <p className="timer-container-scramble">{currentScramble}</p>
         </div>
         }
@@ -248,12 +241,12 @@ const Timer = (props) => {
         {!isHidden &&
           <div className="timer-container-opponet">
             <div className="opponet-time">
-              <p className="oppofnet-nickname" style={{color: currentTheme.accent}}>damjan311</p>
-              <p className="opponet-time" style={{color: currentTheme.accent}}>25.09</p>
+              <p className="opponet-nickname">damjan311</p>
+              <p className="opponet-time">25.09</p>
             </div>
             <div className="opponet-avg">
-              <p className="opponet-ao5" style={{color: currentTheme.accent}}>ao5: 41.25</p>
-              <p className="opponet-ao12" style={{color: currentTheme.accent}}>ao12: 37.19</p>
+              <p className="opponet-ao5">ao5: 41.25</p>
+              <p className="opponet-ao12">ao12: 37.19</p>
             </div>
           </div>
         }
