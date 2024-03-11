@@ -116,18 +116,20 @@ io.on("connection", (socket) => {
 
     socket.on('disconnecting', () => {
         console.log("socket disconnecting")
-        let roomNames = Object.keys(socket.rooms);
-        //console.log(roomNames);
-        console.log(rooms);
-        for (let i = 0; i < roomNames.length; i++) {
-            if (!roomNames[i] === socket.id) continue;
-            if (!rooms[roomNames[i]]) return;
-            io.in(roomNames[i]).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
-            rooms[roomNames[i]].removeSocket(socket, roomNames[i]);
-            checkIfRoomIsEmpty(roomNames[i]);
-            updateWaitingScreenStatus(roomNames[i]);
-            return;
+        let roomNames = Array.from(socket.rooms);
+        console.log(roomNames);
+        for (let i = 1; i < roomNames.length; i++) {
+            console.log("Roomname = " + String(roomNames[i]));
+            if (String(roomNames[i]) != socket.id){
+                io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
+                rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
+                checkIfRoomIsEmpty(String(roomNames[i]));
+                updateWaitingScreenStatus(String(roomNames[i]));
+                console.log(rooms);
+                return;
+            };
         }
+        
     });
     socket.on('disconnect', () => {
         online--;
