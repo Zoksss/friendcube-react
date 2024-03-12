@@ -33,6 +33,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className="top-notif">Website is in development stage. Bugs are expected!</div>
       {!isJoinedPlayers && !isTimerScreen &&
         <LoginCreate
           socket={socket}
