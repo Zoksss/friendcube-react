@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
             rooms[roomCode].sockets[i].isFinished = false;
 
         io.in(roomCode).emit("setScramble", generateScramble(rooms[roomCode].puzzle));
-        io.in(roomCode).emit("startGame" , rooms[roomCode].puzzle);
+        io.in(roomCode).emit("startGame", rooms[roomCode].puzzle);
     });
 
     socket.on("finalTime", (data) => {
@@ -99,7 +99,15 @@ io.on("connection", (socket) => {
             time += 2000;
         }
 
-        rooms[data.roomCode].timesArray.push({ round: rooms[data.roomCode].round, playerName: socket.nickname, playerTime: time, finishedStatus: data.finishedStatus });
+        rooms[data.roomCode].timesArray.push({
+            round: rooms[data.roomCode].round,
+            ao5: data.ao5,
+            ao12: data.ao12,
+            playerName: socket.nickname,
+            playerTime: time,
+            finishedStatus: data.finishedStatus
+        });
+        
         io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 
@@ -120,7 +128,7 @@ io.on("connection", (socket) => {
         console.log(roomNames);
         for (let i = 1; i < roomNames.length; i++) {
             console.log("Roomname = " + String(roomNames[i]));
-            if (String(roomNames[i]) != socket.id){
+            if (String(roomNames[i]) != socket.id) {
                 io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
                 rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
                 checkIfRoomIsEmpty(String(roomNames[i]));
@@ -129,7 +137,7 @@ io.on("connection", (socket) => {
                 return;
             };
         }
-        
+
     });
     socket.on('disconnect', () => {
         online--;

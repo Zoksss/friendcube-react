@@ -49,6 +49,17 @@
                 margin: 0;
             }
         }
+        .opponet-nickname{
+            border: none;
+            outline: none;
+            background-color: transparent;
+            padding: 7px 20px;
+            transition: 300ms all ease;
+            cursor: pointer;
+            &:hover{
+                background-color: #443e3e;
+            }
+        }
         .opponet-avg {
             margin-top: 20px;
             .opponet-ao5,

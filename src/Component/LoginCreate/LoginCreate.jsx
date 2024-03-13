@@ -35,7 +35,7 @@ const LoginCreate = (props) => {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
                     <div className="login-info-buttons">
                         <button><img src={Coffee} alt="" /></button>
-                        <p className="buy-me-the-coffe">made with ❤️ by zoks</p>
+                        <a class="buy-me-the-coffee"href="#">buy me a coffee :)</a>
                     </div>
                 </div>
                 <div className="login-create-input">
@@ -57,36 +57,23 @@ const LoginCreate = (props) => {
                     {!props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" onChange={(e) => props.setNickname(e.target.value)} />
-                        <label htmlFor="">Puzzle <span className="selected-puzzle-label">(3x3)</span></label>
-                        <div className="puzzle-buttons">
-                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("2x2")}} className={`puzzle-button ${selectedPuzzle==="2x2"?"puzzle-button-active":""}`}>
-                                <img src={_2x2} alt="" />
-                            </button>
-                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("3x3")}} className={`puzzle-button ${selectedPuzzle==="3x3"?"puzzle-button-active":""}`}>
-                                <img src={_3x3} alt="" />
-                            </button>
-                            <button onClick={e => e.preventDefault()}className="puzzle-button puzzle-button-disabled">
-                                <img src={_4x4} alt="" />
-                            </button>
-                            <button onClick={(e) => {e.preventDefault(); setSelectedPuzzle("pyraminx")}} className={`puzzle-button ${selectedPuzzle==="pyraminx"?"puzzle-button-active":""}`}>
-                                <img src={_pyraminx} alt="" />
-                            </button>
-                            <button onClick={e => e.preventDefault()} className="puzzle-button puzzle-button-disabled">
-                                <img src={_megaminx} alt="" />
-                            </button>
-                            <button onClick={e => e.preventDefault()} className="puzzle-button puzzle-button-disabled">
-                                <img src={_square1} alt="" />
-                            </button>
-                        </div>
-                        <button className="join-btn" onClick={(e) => { 
-                            e.preventDefault(); 
+                        <label htmlFor="">Puzzle</label>
+                        <select name="puzzle" className="puzzle-input" onChange={(e) => setSelectedPuzzle(e.target.value)}>
+                            <option value="2x2">2x2</option>
+                            <option value="3x3" selected >3x3</option>
+                            <option value="pyraminx">Pyraminx</option>
+                            <option value="megaminx">Megaminx</option>
+                        </select>
+                        <button className="join-btn" onClick={(e) => {
+                            e.preventDefault();
                             props.setIsJoinedPlayers(true);
                             let x = makeRoomId(8);
-                            props.setRoomInputValue(x );
-                            props.socket.emit('join', props.nickname, x , selectedPuzzle); 
-                            }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
+                            props.setRoomInputValue(x);
+                            props.socket.emit('join', props.nickname, x, selectedPuzzle);
+                        }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                 </div>
+                <p className="made-with-harth">made with ❤️ by zoks</p>
             </div>
         </>
     );
