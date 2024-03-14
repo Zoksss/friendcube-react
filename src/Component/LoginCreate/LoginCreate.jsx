@@ -35,7 +35,7 @@ const LoginCreate = (props) => {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
                     <div className="login-info-buttons">
                         <button><img src={Coffee} alt="" /></button>
-                        <a class="buy-me-the-coffee"href="#">buy me a coffee :)</a>
+                        <a className="buy-me-the-coffee"href="#">buy me a coffee :)</a>
                     </div>
                 </div>
                 <div className="login-create-input">
@@ -58,9 +58,9 @@ const LoginCreate = (props) => {
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" onChange={(e) => props.setNickname(e.target.value)} />
                         <label htmlFor="">Puzzle</label>
-                        <select name="puzzle" className="puzzle-input" onChange={(e) => setSelectedPuzzle(e.target.value)}>
+                        <select name="puzzle" className="puzzle-input" defaultValue="3x3" onChange={(e) => setSelectedPuzzle(e.target.value)}>
                             <option value="2x2">2x2</option>
-                            <option value="3x3" selected >3x3</option>
+                            <option value="3x3"  >3x3</option>
                             <option value="pyraminx">Pyraminx</option>
                             <option value="megaminx">Megaminx</option>
                         </select>

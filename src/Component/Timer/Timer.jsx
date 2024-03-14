@@ -10,6 +10,9 @@ let currentTime = 0;
 let currentRound = 1;
 let finishStatus = "finished"
 
+
+let playerNicknames = [];
+let playerNicknamesIndex = 0;
 const Timer = (props) => {
 
   // misc states 
@@ -17,17 +20,19 @@ const Timer = (props) => {
   const [times, setTimes] = React.useState([]);
 
   const [isRoundReady, setIsRoundReady] = React.useState(true);
-  
+
   const [timerDelay, setTimerDelay] = React.useState(1000);
 
   const [ao5, setAo5] = React.useState(-1);
   const [ao12, setAo12] = React.useState(-1);
 
-  const [opponetName, setOpponetName] = React.useState("Zoks");
+  const [opponetName, setOpponetName] = React.useState("");
   const [opponetTime, setOpponetTime] = React.useState(-1);
   const [opponetAo5, setOpponetAo5] = React.useState(-1);
   const [opponetAo12, setOpponetAo12] = React.useState(-1);
-  
+
+  const [opponetsStats, setOpponetsStats] = React.useState({});
+
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
   const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false);
@@ -47,6 +52,8 @@ const Timer = (props) => {
   const [elapsedTime, setElapsedTime] = React.useState(0);
 
 
+  // socket events //
+
   props.socket.on("setScramble", (scramble) => {
     setCurrentScramble(scramble);
   })
@@ -55,13 +62,36 @@ const Timer = (props) => {
     setIsRoundReady(true);
   })
 
+  
+
   props.socket.on("timeGetFromSocket", (timesArrayFromSrv) => {
-      if(timesArrayFromSrv[timesArrayFromSrv.length-1].playerName === opponetName){
-        setOpponetTime(formatTime(timesArrayFromSrv[timesArrayFromSrv.length-1].playerTime));
-        setOpponetAo5(formatTime(timesArrayFromSrv[timesArrayFromSrv.length-1].ao5))
-        setOpponetAo12(formatTime(timesArrayFromSrv[timesArrayFromSrv.length-1].ao12))
-      }
-})
+    let x = opponetsStats;
+
+    let arrayItem = timesArrayFromSrv[timesArrayFromSrv.length - 1];
+    x[arrayItem.playerName] = { playerName: arrayItem.playerName, playerTime: arrayItem.playerTime, ao5: arrayItem.ao5, ao12: arrayItem.ao12 }
+    setOpponetsStats(x);
+    setOpponetName(playerNicknames[playerNicknamesIndex]);
+    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
+
+      setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
+  })
+
+  
+  
+  const changeOpponetTimeDisplay = (initial) => {
+    if (initial) {
+      setOpponetName(playerNicknames[0]);
+      return;
+    }
+    if (playerNicknamesIndex === playerNicknames.length - 1) playerNicknamesIndex = 0;
+    else playerNicknamesIndex++;
+
+    console.log("test test + " + playerNicknamesIndex);
+    console.log(opponetsStats[playerNicknames[playerNicknamesIndex]]);
+    setOpponetName(playerNicknames[playerNicknamesIndex]);
+    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
+      setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
+  }
 
 
   // stopwatch logic and useEffect
@@ -228,7 +258,7 @@ const Timer = (props) => {
   //  {isSettingScreen && <SettingsScreen setisSettingScreen={setisSettingScreen}/> }
   return (
     <>
-      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay}/>}
+      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay} />}
       {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
       <div className="timer-container">
         {!isHidden && < Sidebar
@@ -255,12 +285,12 @@ const Timer = (props) => {
         {!isHidden &&
           <div className="timer-container-opponet">
             <div className="opponet-time">
-              <button className="opponet-nickname">{opponetName}</button>
-              <p className="opponet-time">{opponetTime!=-1?opponetTime:"--:--"}</p>
+              <button onClick={() => { changeOpponetTimeDisplay(false) }} className="opponet-nickname">{opponetName}</button>
+              <p className="opponet-time">{opponetTime !== -1 ? formatTime(opponetTime) : "--:--"}</p>
             </div>
             <div className="opponet-avg">
-              <p className="opponet-ao5">ao5: {opponetAo5!=-1?opponetAo5:"--:--"}</p>
-              <p className="opponet-ao12">ao12: {opponetAo12!=-1?opponetAo12:"--:--"}</p>
+              <p className="opponet-ao5">ao5: {opponetAo5 !== -1 ? opponetAo5 : "--:--"}</p>
+              <p className="opponet-ao12">ao12: {opponetAo12 !== -1 ? opponetAo12 : "--:--"}</p>
             </div>
           </div>
         }

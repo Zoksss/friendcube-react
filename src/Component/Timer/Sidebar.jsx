@@ -1,4 +1,4 @@
-import './Timer.scss';
+import "./Timer.scss"
 import SidebarTime from './SidebarTime';
 
 import Players from "../../assets/players.svg"

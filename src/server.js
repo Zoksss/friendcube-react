@@ -86,6 +86,13 @@ io.on("connection", (socket) => {
 
         io.in(roomCode).emit("setScramble", generateScramble(rooms[roomCode].puzzle));
         io.in(roomCode).emit("startGame", rooms[roomCode].puzzle);
+        let x = [];
+        rooms[roomCode].sockets.forEach(socket => {
+            let socketNickname = io.sockets.sockets.get(socket.socketId).nickname;
+            x.push(socketNickname);
+        });
+        
+        io.in(roomCode).emit("updatePlayerNicknnameArray", x);
     });
 
     socket.on("finalTime", (data) => {

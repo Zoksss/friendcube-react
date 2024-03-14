@@ -13,7 +13,7 @@ const socket = io.connect("http://localhost:4000");
 
 function App() {
 
-  const [isLogin, setIsLogin] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(true);
   const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);
   const [isTimerScreen, setIsTimerScreen] = React.useState(false);
 
