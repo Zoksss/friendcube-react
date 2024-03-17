@@ -4,6 +4,7 @@ import React from 'react';
 import Timer from './Component/Timer/Timer';
 import LoginCreate from './Component/LoginCreate/LoginCreate';
 import JoinedPlayers from './Component/JoinedPlayers/JoinedPlayers';
+import Notification from './Component/Notification/Notification';
 
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:4000");
@@ -34,6 +35,7 @@ function App() {
   return (
     <div className="App">
       <div className="top-notif">Website is in development stage. Bugs are expected!</div>
+      < Notification />
       {!isJoinedPlayers && !isTimerScreen &&
         <LoginCreate
           socket={socket}

@@ -13,13 +13,16 @@ let finishStatus = "finished"
 
 let playerNicknames = [];
 let playerNicknamesIndex = 0;
+
+
+ let isRoundReady = true;
+
 const Timer = (props) => {
 
   // misc states 
   const [timerColor, setTimerColor] = React.useState("white");
   const [times, setTimes] = React.useState([]);
 
-  const [isRoundReady, setIsRoundReady] = React.useState(true);
 
   const [timerDelay, setTimerDelay] = React.useState(1000);
 
@@ -59,10 +62,13 @@ const Timer = (props) => {
   })
 
   props.socket.on("ready", () => {
-    setIsRoundReady(true);
+    isRoundReady = true;
   })
 
-  
+  props.socket.on("updatePlayerNicknnameArray", nicknameArray => {
+    playerNicknames = nicknameArray;
+  })
+
 
   props.socket.on("timeGetFromSocket", (timesArrayFromSrv) => {
     let x = opponetsStats;
@@ -71,27 +77,9 @@ const Timer = (props) => {
     x[arrayItem.playerName] = { playerName: arrayItem.playerName, playerTime: arrayItem.playerTime, ao5: arrayItem.ao5, ao12: arrayItem.ao12 }
     setOpponetsStats(x);
     setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
-
-      setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
+    if (x[playerNicknames[playerNicknamesIndex]].playerTime)
+      setOpponetTime(x[playerNicknames[playerNicknamesIndex]].playerTime);
   })
-
-  
-  
-  const changeOpponetTimeDisplay = (initial) => {
-    if (initial) {
-      setOpponetName(playerNicknames[0]);
-      return;
-    }
-    if (playerNicknamesIndex === playerNicknames.length - 1) playerNicknamesIndex = 0;
-    else playerNicknamesIndex++;
-
-    console.log("test test + " + playerNicknamesIndex);
-    console.log(opponetsStats[playerNicknames[playerNicknamesIndex]]);
-    setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
-      setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
-  }
 
 
   // stopwatch logic and useEffect
@@ -112,95 +100,6 @@ const Timer = (props) => {
 
     return () => clearInterval(intervalId);
   }, [isRunning, elapsedTime]);
-
-
-  const startStopwatch = () => {
-    resetStopwatch()
-    setIsHidden(true);
-    setIsRunning(true);
-    isSpace = false;
-  };
-
-  const stopStopwatch = () => {
-    setIsHidden(false);
-    setIsRunning(false);
-    // new scramble
-    setIsFinishStatusScreen(true);
-  };
-
-  const calculateAvgs = (currentFinishedStatus) => {    // calculate and if dnf set dnf
-
-    let x = times;       // pushing new time inside of times[] array
-    if (currentFinishedStatus === "dnf") currentTime = "dnf"
-    else if (currentFinishedStatus === "plus2") currentTime += 2000;
-
-    x.unshift(currentTime);
-    if (times.length >= 13) times.pop();
-    setTimes(x);
-
-    // eslint-disable-next-line
-    ao12Start: if (times.length >= 5) {
-      let ao5temp = 0;
-      for (let i = 0; i < 5; i++) {
-        if (times[i] === "dnf") {
-          setAo5("dnf");
-          // eslint-disable-next-line
-          break ao12Start;
-        }
-        ao5temp += times[i];
-      }
-
-      ao5temp = ao5temp / 5;
-      setAo5(ao5temp);
-    }
-    if (times.length >= 12) {
-      let ao12temp = 0;
-      for (let i = 0; i < 12; i++) {
-        if (times[i] === "dnf") {
-          setAo12("dnf");
-          return;
-        }
-        ao12temp += times[i];
-      }
-      ao12temp = ao12temp / 12;
-      setAo12(ao12temp);
-    }
-    console.log(times);
-  }
-
-  const fireTimeToServer = (currentFinishedStatus) => {
-    calculateAvgs(currentFinishedStatus);
-    if (currentFinishedStatus !== "x") {
-      props.socket.emit("finalTime", {
-        roomCode: props.roomInputValue
-        , playerTime: currentTime
-        , ao5: ao5
-        , ao12: ao12
-        , finishedStatus: currentFinishedStatus // finished, dnf, plus2, x
-      });
-      setIsRoundReady(false);
-      setCurrentScramble("Waiting for others to finish...")
-    }
-  }
-
-  const resetStopwatch = () => {
-    setElapsedTime(0);
-    setIsRunning(false);
-  };
-
-
-  const formatTime = (time) => {
-    const milliseconds = String(time % 1000).padStart(3, '0');
-    const seconds = String(Math.floor(time / 1000) % 60).padStart(2, '0');
-    const minutes = Math.floor(time / 60000);
-    let formattedTime = '';
-
-    if (minutes > 0) {
-      formattedTime += `${minutes}:`;
-    }
-    formattedTime += `${seconds}.${milliseconds.slice(0, 2)}`;
-    return formattedTime;
-  };
 
 
   // space handling logic and useEffect
@@ -254,12 +153,127 @@ const Timer = (props) => {
     };
   }, [holdTimeout, isSpaceHeld]);
 
+  const startStopwatch = () => {
+    resetStopwatch()
+    setIsHidden(true);
+    setIsRunning(true);
+    isSpace = false;
+  };
 
-  //  {isSettingScreen && <SettingsScreen setisSettingScreen={setisSettingScreen}/> }
+  const stopStopwatch = () => {
+    setIsHidden(false);
+    setIsRunning(false);
+    // new scramble
+    setIsFinishStatusScreen(true);
+  };
+
+  const resetStopwatch = () => {
+    setElapsedTime(0);
+    setIsRunning(false);
+  };
+
+
+
+  // other functions
+
+const fireTimeToServer = (currentFinishedStatus) => {
+    calculateAvgs(currentFinishedStatus);
+    if (currentFinishedStatus !== "x") {
+      props.socket.emit("finalTime", {
+        roomCode: props.roomInputValue
+        , playerTime: currentTime
+        , ao5: ao5
+        , ao12: ao12
+        , finishedStatus: currentFinishedStatus // finished, dnf, plus2, x
+      });
+      isRoundReady = false;
+      console.log("round is: ", isRoundReady);
+      setIsHidden(false);
+      setCurrentScramble("Waiting for others to finish...")
+    }
+  }
+
+  const calculateAvgs = (currentFinishedStatus) => {    // calculate and if dnf set dnf
+    let x = times;
+    if (currentFinishedStatus === "dnf") currentTime = "dnf"
+    else if (currentFinishedStatus === "plus2") currentTime += 2000;
+
+    x.unshift(currentTime);
+    if (times.length >= 13) times.pop();
+    setTimes(x);
+
+    // eslint-disable-next-line
+    ao12Start: if (times.length >= 5) {
+      let ao5temp = 0;
+      for (let i = 0; i < 5; i++) {
+        if (times[i] === "dnf") {
+          setAo5("dnf");
+          // eslint-disable-next-line
+          break ao12Start;
+        }
+        ao5temp += times[i];
+      }
+
+      ao5temp = ao5temp / 5;
+      setAo5(ao5temp);
+    }
+    if (times.length >= 12) {
+      let ao12temp = 0;
+      for (let i = 0; i < 12; i++) {
+        if (times[i] === "dnf") {
+          setAo12("dnf");
+          return;
+        }
+        ao12temp += times[i];
+      }
+      ao12temp = ao12temp / 12;
+      setAo12(ao12temp);
+    }
+  }
+
+
+  const changeOpponetTimeDisplay = (initial) => {
+    if (initial) {
+      setOpponetName(playerNicknames[0]);
+      return;
+    }
+    if (playerNicknamesIndex === playerNicknames.length - 1) playerNicknamesIndex = 0;
+    else playerNicknamesIndex++;
+
+    setOpponetName(playerNicknames[playerNicknamesIndex]);
+    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
+      setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
+  }
+
+
+  const formatTime = (time) => {
+    const milliseconds = String(time % 1000).padStart(3, '0');
+    const seconds = String(Math.floor(time / 1000) % 60).padStart(2, '0');
+    const minutes = Math.floor(time / 60000);
+    let formattedTime = '';
+    if (minutes > 0) {
+      formattedTime += `${minutes}:`;
+    }
+    formattedTime += `${seconds}.${milliseconds.slice(0, 2)}`;
+    return formattedTime;
+  };
+
+
   return (
     <>
-      {isSettingScreen && <SettingsScreen setIsSettingsScreen={setIsSettingsScreen} setTimerDelay={setTimerDelay} timerDelay={timerDelay} />}
-      {isFinishedStatusScreen && <FinishedScreen setIsFinishStatusScreen={setIsFinishStatusScreen} finishStatus={finishStatus} fireTimeToServer={fireTimeToServer} />}
+      {isSettingScreen &&
+        <SettingsScreen
+          setIsSettingsScreen={setIsSettingsScreen}
+          setTimerDelay={setTimerDelay}
+          timerDelay={timerDelay}
+        />}
+
+      {isFinishedStatusScreen &&
+        <FinishedScreen
+          setIsFinishStatusScreen={setIsFinishStatusScreen}
+          finishStatus={finishStatus}
+          fireTimeToServer={fireTimeToServer} />}
+
       <div className="timer-container">
         {!isHidden && < Sidebar
           username={props.nickname}

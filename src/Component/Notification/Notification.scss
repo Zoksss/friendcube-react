@@ -1,0 +1,30 @@
+.notification-container {
+    width: 450px;
+    height: 100px;
+    background-color: #D62929;
+    z-index: 99999;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: left;
+    padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .notification-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-top: -5px;
+    }
+    .otification-desc{
+        font-size: 18px;
+        font-weight: 400;
+    }
+    .notification-image{
+        position: absolute;
+        right: 0;
+        height: 100%;
+    }
+}
