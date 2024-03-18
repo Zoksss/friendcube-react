@@ -23,6 +23,36 @@ const LoginCreate = (props) => {
         }
         return result;
     }
+    const validateInput = (nickname, roomCode, puzzle) => {
+        if (nickname === "") {
+            props.addNotification("Error!", "Nickname cannot be empty!");
+            return false;
+        }
+        if (!isLetter(nickname.charAt(0))) {
+            props.addNotification("Error!", "Nickname must start with a letter!");
+            return false;
+        }
+        if (nickname.length < 3) {
+            props.addNotification("Error!", "Nickname must be 3 or more characters!");
+            return false;
+        }
+        if (roomCode.length != 8) {
+            props.addNotification("Error!", "Room code must be 8 numbers long!");
+            return false;
+        }
+        for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) {
+            props.addNotification("Error!", "Room code must be all numbers!");
+            return false;
+        }
+        if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") {
+            props.addNotification("Error!", "0x01: Puzzle error");
+            return false;
+        }
+        return true;
+    }
+    function isLetter(str) {
+        return str.length === 1 && str.match(/[a-z]/i);
+    }
 
 
 
@@ -50,8 +80,11 @@ const LoginCreate = (props) => {
                         <input type="text" placeholder="eg. 01344122" maxLength="8" onChange={(e) => props.setRoomInputValue(e.target.value)} />
                         <button className="join-btn" onClick={(e) => {
                             e.preventDefault();
-                            props.setIsJoinedPlayers(true);
-                            props.socket.emit('join', props.nickname, props.roomInputValue, "3x3"); // makeRoomId();
+                            let x = validateInput(props.nickname, props.roomInputValue, "3x3");
+                            if (x) {
+                                props.setIsJoinedPlayers(true);
+                                props.socket.emit('join', props.nickname, props.roomInputValue, "3x3"); // makeRoomId();
+                            }
                         }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                     {!props.isLogin && <form action="/" className="login-form">
@@ -67,9 +100,12 @@ const LoginCreate = (props) => {
                         <button className="join-btn" onClick={(e) => {
                             e.preventDefault();
                             props.setIsJoinedPlayers(true);
-                            let x = makeRoomId(8);
-                            props.setRoomInputValue(x);
-                            props.socket.emit('join', props.nickname, x, selectedPuzzle);
+                            let roomId = makeRoomId(8);
+                            props.setRoomInputValue(roomId);
+                            let x = validateInput(props.nickname, roomId, selectedPuzzle);
+                            if (x) {
+                                props.socket.emit('join', props.nickname, roomId, selectedPuzzle);
+                            }
                         }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
                 </div>

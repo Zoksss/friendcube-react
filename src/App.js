@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 
+
 import Timer from './Component/Timer/Timer';
 import LoginCreate from './Component/LoginCreate/LoginCreate';
 import JoinedPlayers from './Component/JoinedPlayers/JoinedPlayers';
@@ -27,19 +28,31 @@ function App() {
   const [currentPuzzle, setCurrentPuzzle] = React.useState("3x3");
 
   const addNotification = (notificationType, notificationDesc) => {
-    let x = notificationsList;
     setNotificationsList([{ notificationType: notificationType, notificationDesc: notificationDesc }])
   }
 
-  const notificationsListed = notificationsList.map((notif, i) => <Notification key={i} notificationDesc={notif.notificationDesc} notificationType={notif.notificationType}/>)
+  const notificationsListed = notificationsList.map((notif, i) => <Notification key={i} notificationDesc={notif.notificationDesc} notificationType={notif.notificationType} />)
 
+  React.useEffect(() => {
+    if (notificationsList.length !== 0) {
+      let timeoutId;
 
+      timeoutId = setTimeout(() => {
+        setNotificationsList([]);
+      }, 2000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notificationsList]);
 
   socket.on("startGame", (puzzle) => {
     setIsJoinedPlayers(false);
     setIsTimerScreen(true);
     setCurrentPuzzle(puzzle);
   });
+
+  socket.on("joinedLeavedNotification", data => {
+    if (!data.joined) addNotification("Warning!", data.nickname + " has left the room!");
+  })
 
 
   return (
