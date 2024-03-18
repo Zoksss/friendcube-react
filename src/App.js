@@ -14,6 +14,9 @@ const socket = io.connect("http://localhost:4000");
 
 function App() {
 
+  const [notificationsList, setNotificationsList] = React.useState([]);
+
+
   const [isLogin, setIsLogin] = React.useState(true);
   const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);
   const [isTimerScreen, setIsTimerScreen] = React.useState(false);
@@ -23,19 +26,26 @@ function App() {
   const [nickname, setNickname] = React.useState("");
   const [currentPuzzle, setCurrentPuzzle] = React.useState("3x3");
 
+  const addNotification = (notificationType, notificationDesc) => {
+    let x = notificationsList;
+    setNotificationsList([{ notificationType: notificationType, notificationDesc: notificationDesc }])
+  }
+
+  const notificationsListed = notificationsList.map((notif, i) => <Notification key={i} notificationDesc={notif.notificationDesc} notificationType={notif.notificationType}/>)
+
 
 
   socket.on("startGame", (puzzle) => {
     setIsJoinedPlayers(false);
     setIsTimerScreen(true);
     setCurrentPuzzle(puzzle);
-  })
+  });
 
 
   return (
     <div className="App">
       <div className="top-notif">Website is in development stage. Bugs are expected!</div>
-      < Notification />
+      {notificationsListed}
       {!isJoinedPlayers && !isTimerScreen &&
         <LoginCreate
           socket={socket}
@@ -46,6 +56,7 @@ function App() {
           roomInputValue={roomInputValue}
           setNickname={setNickname}
           nickname={nickname}
+          addNotification={addNotification}
         />}
       {isJoinedPlayers &&
         < JoinedPlayers
@@ -60,6 +71,7 @@ function App() {
         nickname={nickname}
         roomInputValue={roomInputValue}
         currentPuzzle={currentPuzzle}
+        addNotification={addNotification}
       />
     </div >
   );

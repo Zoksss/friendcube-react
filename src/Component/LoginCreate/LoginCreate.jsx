@@ -35,13 +35,13 @@ const LoginCreate = (props) => {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
                     <div className="login-info-buttons">
                         <button><img src={Coffee} alt="" /></button>
-                        <a className="buy-me-the-coffee"href="#">buy me a coffee :)</a>
+                        <a className="buy-me-the-coffee" href="#">buy me a coffee :)</a>
                     </div>
                 </div>
                 <div className="login-create-input">
                     <div className="login-create-input-title">
                         <p className="join-label">{props.isLogin ? "Login" : "Create"}</p>
-                        <button href="/" onClick={() => props.setIsLogin(!props.isLogin)}>{!props.isLogin ? "or Login" : "or Create"}</button>
+                        <button href="/" onClick={() => { props.setIsLogin(!props.isLogin); props.addNotification("Error!", "Nickname alredy in use!"); }}>{!props.isLogin ? "or Login" : "or Create"}</button>
                     </div>
                     {props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
@@ -74,7 +74,7 @@ const LoginCreate = (props) => {
                     </form>}
                 </div>
                 <p className="made-with-harth">made with ❤️ by zoks</p>
-            </div>
+            </div >
         </>
     );
 }

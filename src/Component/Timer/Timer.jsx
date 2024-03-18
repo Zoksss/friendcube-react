@@ -154,6 +154,7 @@ const Timer = (props) => {
   }, [holdTimeout, isSpaceHeld]);
 
   const startStopwatch = () => {
+    props.addNotification("Tick", "Timer Started Correctly!");
     resetStopwatch()
     setIsHidden(true);
     setIsRunning(true);
