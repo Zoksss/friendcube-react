@@ -75,6 +75,9 @@
         width: 340px;
         height: 430px;
         background-color: #201e1f;
+        .login-create-input-mobile-top {
+            display: none;
+        }
         .login-create-input-title {
             padding: 40px 40px 0 40px;
             display: flex;
@@ -117,7 +120,7 @@
                 margin-bottom: 10px;
             }
 
-            .puzzle-input{
+            .puzzle-input {
                 background-color: #443e3e;
                 outline: none;
                 border: none;
@@ -127,7 +130,7 @@
                 padding: 0 15px;
                 width: 100%;
                 margin-bottom: 10px;
-                option{
+                option {
                     height: 45px;
                 }
             }
@@ -189,8 +192,38 @@
     }
     .login-create-input {
         width: 100% !important;
+        height: 100vh !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        .login-form {
+            position: absolute !important;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .login-create-input-mobile-top {
+            display: block !important;
+            margin-top: 30px;
+        }
+        .login-create-input-title {
+            margin-top: 50px;
+            margin-top: 50px;
+        }
+
+        .login-create-input-mobile-subititle {
+            font-weight: 500;
+            span {
+                color: #ee6c4d;
+            }
+        }
     }
     .login-info {
-        width: 100% !important;
+        display: none !important;
+    }
+
+    .made-with-harth {
+        bottom: 30px !important;
     }
 }

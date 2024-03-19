@@ -69,10 +69,15 @@ const LoginCreate = (props) => {
                     </div>
                 </div>
                 <div className="login-create-input">
+                    <div className="login-create-input-mobile-top">
+                        <h1 className="login-create-input-mobile-title">FriendCube</h1>
+                        <h2 className="login-create-input-mobile-subititle">solve <span>with</span> friends</h2>
+                    </div>
                     <div className="login-create-input-title">
                         <p className="join-label">{props.isLogin ? "Login" : "Create"}</p>
-                        <button href="/" onClick={() => { props.setIsLogin(!props.isLogin); props.addNotification("Error!", "Nickname alredy in use!"); }}>{!props.isLogin ? "or Login" : "or Create"}</button>
+                        <button href="/" onClick={() => props.setIsLogin(!props.isLogin)}>{!props.isLogin ? "or Login" : "or Create"}</button>
                     </div>
+
                     {props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" maxLength="8" onChange={(e) => props.setNickname(e.target.value)} />
@@ -87,6 +92,10 @@ const LoginCreate = (props) => {
                             }
                         }}>{props.isLogin ? "Join Room" : "Create Room"} </button>
                     </form>}
+
+
+
+
                     {!props.isLogin && <form action="/" className="login-form">
                         <label htmlFor="">Nickname</label>
                         <input type="text" placeholder="eg. Zoks" onChange={(e) => props.setNickname(e.target.value)} />
