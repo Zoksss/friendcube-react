@@ -15,7 +15,7 @@ let playerNicknames = [];
 let playerNicknamesIndex = 0;
 
 
- let isRoundReady = true;
+let isRoundReady = true;
 
 const Timer = (props) => {
 
@@ -73,7 +73,7 @@ const Timer = (props) => {
   props.socket.on("timeGetFromSocket", (timesArrayFromSrv) => {
     let x = opponetsStats;
 
-    let arrayItem = timesArrayFromSrv[timesArrayFromSrv.length - 1];
+    let arrayItem = timesArrayFromSrv[1];
     x[arrayItem.playerName] = { playerName: arrayItem.playerName, playerTime: arrayItem.playerTime, ao5: arrayItem.ao5, ao12: arrayItem.ao12 }
     setOpponetsStats(x);
     setOpponetName(playerNicknames[playerNicknamesIndex]);
@@ -177,7 +177,7 @@ const Timer = (props) => {
 
   // other functions
 
-const fireTimeToServer = (currentFinishedStatus) => {
+  const fireTimeToServer = (currentFinishedStatus) => {
     calculateAvgs(currentFinishedStatus);
     if (currentFinishedStatus !== "x") {
       props.socket.emit("finalTime", {
@@ -233,6 +233,8 @@ const fireTimeToServer = (currentFinishedStatus) => {
   }
 
 
+
+  // check +1, not 0 index
   const changeOpponetTimeDisplay = (initial) => {
     if (initial) {
       setOpponetName(playerNicknames[0]);
@@ -242,7 +244,7 @@ const fireTimeToServer = (currentFinishedStatus) => {
     else playerNicknamesIndex++;
 
     setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
+    if (opponetsStats[playerNicknames[playerNicknamesIndex]] && opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
       setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
   }
 

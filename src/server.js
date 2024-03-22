@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
             let socketNickname = io.sockets.sockets.get(socket.socketId).nickname;
             x.push(socketNickname);
         });
-        
+
         io.in(roomCode).emit("updatePlayerNicknnameArray", x);
     });
 
@@ -106,15 +106,22 @@ io.on("connection", (socket) => {
             time += 2000;
         }
 
-        rooms[data.roomCode].timesArray.push({
-            round: rooms[data.roomCode].round,
-            ao5: data.ao5,
-            ao12: data.ao12,
-            playerName: socket.nickname,
-            playerTime: time,
-            finishedStatus: data.finishedStatus
-        });
-        
+        rooms[data.roomCode].timesArray = [
+            ...rooms[data.roomCode].timesArray.slice(0, 1),
+            {
+                round: rooms[data.roomCode].round,
+                ao5: data.ao5,
+                ao12: data.ao12,
+                playerName: socket.nickname,
+                playerTime: time,
+                finishedStatus: data.finishedStatus
+            },
+            ...rooms[data.roomCode].timesArray.slice(1)
+        ];
+
+
+
+
         io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 

@@ -17,5 +17,7 @@
 .top-notif{
   background-color: #ee6c4d;
   color:rgba(0, 0, 0, 0.758);
+  position: relative;
   padding: 3px 0;
+  z-index: 9999999999999999999999;
 }
