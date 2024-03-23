@@ -1,4 +1,6 @@
 import "./Timer.scss"
+import { useTransition, animated } from "react-spring"
+
 import SidebarTime from './SidebarTime';
 
 import Players from "../../assets/players.svg"
@@ -14,6 +16,13 @@ const Sidebar = (props) => {
     const [isSidebarVisible, setIsSidebarVisible] = React.useState(true);
 
     const timesListed = sidebarUI.map((timeObj, i) => (timeObj.playerTime === -1) ? <div key={i} className="sidebar-round"><p>#{timeObj.round}</p></div> : <SidebarTime key={i} playerName={timeObj.playerName} playerTime={timeObj.playerTime} formatTime={props.formatTime} finishedStatus={timeObj.finishedStatus} />)
+
+    const transition = useTransition(isSidebarVisible && !props.isHidden, {
+        from: { left: -70, opacity: 0, display: "none" },
+        enter: { left: 0, opacity: 1, display: "block" },
+        leave: { left: -70, opacity: 0, display: "none" },
+    });
+
 
     props.socket.on("timeGetFromSocket", (timesArrayFromSrv) => {
         setSidebarUI(timesArrayFromSrv);
@@ -33,9 +42,12 @@ const Sidebar = (props) => {
 
     return (
         <>
-            <div className="sidebar" style={{ display: isSidebarVisible ? "block" : "none" }}>
-                {timesListed}
-            </div>
+            {transition((style, item) =>
+                item ?
+                    <animated.div className="sidebar" style={style}>
+                        {timesListed}
+                    </animated.div > : ""
+            )}
             <div className="sidebar-buttons-container">
                 <div className="sidebar-buttons">
                     <div className="sidebar-buttons-top">
@@ -45,8 +57,9 @@ const Sidebar = (props) => {
                         <button><img src={Players} alt="" /></button>
                     </div>
                     <button className="leave-room-btn" onClick={() => window.location.reload(false)}>leave room</button>
-            </div>
-        </div >
+                </div>
+            </div >
+
         </>
     );
 }

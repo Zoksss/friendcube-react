@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 
+// const springs = useSprings(number, items.map(item => ({ opacity: item.opacity }))
 
 import Timer from './Component/Timer/Timer';
 import LoginCreate from './Component/LoginCreate/LoginCreate';
@@ -9,8 +10,6 @@ import Notification from './Component/Notification/Notification';
 
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:4000");
-
-
 
 
 function App() {
@@ -32,6 +31,8 @@ function App() {
   }
 
   const notificationsListed = notificationsList.map((notif, i) => <Notification key={i} notificationDesc={notif.notificationDesc} notificationType={notif.notificationType} />)
+
+
 
   React.useEffect(() => {
     if (notificationsList.length !== 0) {
@@ -59,7 +60,7 @@ function App() {
     <div className="App">
       <div className="top-notif">Website is in development stage. Bugs are expected!</div>
       {notificationsListed}
-      {!isJoinedPlayers && !isTimerScreen &&
+      {
         <LoginCreate
           socket={socket}
           isLogin={isLogin}
@@ -70,14 +71,17 @@ function App() {
           setNickname={setNickname}
           nickname={nickname}
           addNotification={addNotification}
+          isJoinedPlayers={isJoinedPlayers}
+          isTimerScreen={isTimerScreen}
         />}
-      {isJoinedPlayers &&
+      {
         < JoinedPlayers
           socket={socket}
           setIsJoinedPlayers={setIsJoinedPlayers}
           setIsTimerScreen={setIsTimerScreen}
           roomInputValue={roomInputValue}
           nickname={nickname}
+          isJoinedPlayers={isJoinedPlayers}
         />}
       <Timer
         socket={socket}

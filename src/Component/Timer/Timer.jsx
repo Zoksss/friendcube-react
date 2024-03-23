@@ -154,7 +154,6 @@ const Timer = (props) => {
   }, [holdTimeout, isSpaceHeld]);
 
   const startStopwatch = () => {
-    props.addNotification("Tick", "Timer Started Correctly!");
     resetStopwatch()
     setIsHidden(true);
     setIsRunning(true);
@@ -278,7 +277,7 @@ const Timer = (props) => {
           fireTimeToServer={fireTimeToServer} />}
 
       <div className="timer-container">
-        {!isHidden && < Sidebar
+        {< Sidebar
           username={props.nickname}
           currentRound={currentRound}
           formatTime={formatTime}
@@ -286,6 +285,7 @@ const Timer = (props) => {
           isRoundReady={isRoundReady}
           setIsSettingsScreen={setIsSettingsScreen}
           isSettingScreen={isSettingScreen}
+          isHidden={isHidden}
         />}
         {!isHidden && <div className="timer-top">
           <p className="timer-container-puzzle-label">{props.currentPuzzle}</p>

@@ -15,6 +15,7 @@ body {
   background-color: #201E1F;
   color: #FFFFFF;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: hidden;
 }
 
 code {
