@@ -56,7 +56,7 @@ const LoginCreate = (props) => {
         return str.length === 1 && str.match(/[a-z]/i);
     }
 
-    const transition = useTransition(!props.isJoinedPlayers && !props.isTimerScreen, {
+    const transition = useTransition(!props.isJoinedPlayers && !props.isTimerScreen && !props.isRoomClosedScreen, {
         from: {top: -70, opacity: 0 },
         enter: {top: -0, y: 0, opacity: 1 },
         leave: {top: 70, y: 0, opacity: 0 },

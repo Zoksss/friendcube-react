@@ -119,9 +119,6 @@ io.on("connection", (socket) => {
             ...rooms[data.roomCode].timesArray.slice(1)
         ];
 
-
-
-
         io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 
@@ -136,22 +133,11 @@ io.on("connection", (socket) => {
 
     });
 
+    socket.on("leaveRoom", () => {
+        socketDisconnect(socket);
+    })
     socket.on('disconnecting', () => {
-        console.log("socket disconnecting")
-        let roomNames = Array.from(socket.rooms);
-        console.log(roomNames);
-        for (let i = 1; i < roomNames.length; i++) {
-            console.log("Roomname = " + String(roomNames[i]));
-            if (String(roomNames[i]) != socket.id) {
-                io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
-                rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
-                checkIfRoomIsEmpty(String(roomNames[i]));
-                updateWaitingScreenStatus(String(roomNames[i]));
-                console.log(rooms);
-                return;
-            };
-        }
-
+        socketDisconnect(socket)
     });
     socket.on('disconnect', () => {
         online--;
@@ -161,6 +147,23 @@ io.on("connection", (socket) => {
 
 
 // functions
+
+const socketDisconnect = (socket) => {
+    console.log("socket disconnecting")
+    let roomNames = Array.from(socket.rooms);
+    console.log(roomNames);
+    for (let i = 1; i < roomNames.length; i++) {
+        console.log("Roomname = " + String(roomNames[i]));
+        if (String(roomNames[i]) != socket.id) {
+            io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
+            rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
+            checkIfRoomIsEmpty(String(roomNames[i]));
+            updateWaitingScreenStatus(String(roomNames[i]));
+            console.log(rooms);
+            return;
+        };
+    }
+}
 
 const checkIfRoomIsEmpty = (roomCode) => {
     if (rooms[roomCode].sockets.length != 0) return;

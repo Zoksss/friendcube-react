@@ -7,6 +7,7 @@ import Timer from './Component/Timer/Timer';
 import LoginCreate from './Component/LoginCreate/LoginCreate';
 import JoinedPlayers from './Component/JoinedPlayers/JoinedPlayers';
 import Notification from './Component/Notification/Notification';
+import RoomClosedScreen from './Component/RoomClosedScreen/RoomClosedScreen';
 
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:4000");
@@ -20,6 +21,7 @@ function App() {
   const [isLogin, setIsLogin] = React.useState(true);
   const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);
   const [isTimerScreen, setIsTimerScreen] = React.useState(false);
+  const [isRoomClosedScreen, setIsRoomClosedScreen] = React.useState(false);
 
   const [roomInputValue, setRoomInputValue] = React.useState("");
   // eslint-disable-next-line
@@ -73,6 +75,7 @@ function App() {
           addNotification={addNotification}
           isJoinedPlayers={isJoinedPlayers}
           isTimerScreen={isTimerScreen}
+          isRoomClosedScreen={isRoomClosedScreen}
         />}
       {
         < JoinedPlayers
@@ -83,12 +86,19 @@ function App() {
           nickname={nickname}
           isJoinedPlayers={isJoinedPlayers}
         />}
+      <RoomClosedScreen
+        isRoomClosedScreen={isRoomClosedScreen}
+        setIsRoomClosedScreen={setIsRoomClosedScreen}
+        setIsLogin={setIsLogin}
+      />
       <Timer
         socket={socket}
         nickname={nickname}
         roomInputValue={roomInputValue}
         currentPuzzle={currentPuzzle}
         addNotification={addNotification}
+        setIsRoomClosedScreen={setIsRoomClosedScreen}
+        setIsLogin={setIsLogin}
       />
     </div >
   );

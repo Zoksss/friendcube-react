@@ -260,6 +260,12 @@ const Timer = (props) => {
     return formattedTime;
   };
 
+  const leaveRoom = () => {
+    console.log("socket leaving")
+    props.setIsRoomClosedScreen(true);
+    props.socket.emit("leaveRoom");
+  }
+
 
   return (
     <>
@@ -286,6 +292,7 @@ const Timer = (props) => {
           setIsSettingsScreen={setIsSettingsScreen}
           isSettingScreen={isSettingScreen}
           isHidden={isHidden}
+          leaveRoom={leaveRoom}
         />}
         {!isHidden && <div className="timer-top">
           <p className="timer-container-puzzle-label">{props.currentPuzzle}</p>

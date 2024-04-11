@@ -56,7 +56,7 @@ const Sidebar = (props) => {
                         <button onClick={() => { props.setIsSettingsScreen(true) }} style={{ backgroundColor: props.isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Settings} alt="" /></button>
                         <button><img src={Players} alt="" /></button>
                     </div>
-                    <button className="leave-room-btn" onClick={() => window.location.reload(false)}>leave room</button>
+                    <button className="leave-room-btn" onClick={() => props.leaveRoom()}>leave room</button>
                 </div>
             </div >
 
