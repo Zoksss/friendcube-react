@@ -20,36 +20,36 @@ const RoomClosedScreen = (props) => {
                             <div className="room-closed-screen-card-holder">
                                 <div className="room-closed-screen-card">
                                     <p className="best-avg">Best AVG!</p>
-                                    <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: 30.07</p>
-                                    <p className="stat">pb: 21.59</p>
-                                    <p className="stat">ao5: 35.01</p>
-                                    <p className="stat">ao12: 34.94</p>
+                                    <p className="player-name">name</p>
+                                    <p className="stat">avg: --:--</p>
+                                    <p className="stat">pb: --:--</p>
+                                    <p className="stat">ao5: --:--</p>
+                                    <p className="stat">ao12: --:--</p>
                                 </div>
                                 <div className="room-closed-screen-card">
                                     <p className="best-pr">Best PR!</p>
                                     <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: 30.07</p>
-                                    <p className="stat">pb: 21.59</p>
-                                    <p className="stat">ao5: 35.01</p>
-                                    <p className="stat">ao12: 34.94</p>
+                                    <p className="stat">avg: --:--</p>
+                                    <p className="stat">pb: --:--</p>
+                                    <p className="stat">ao5: --:--</p>
+                                    <p className="stat">ao12: --:--</p>
                                 </div>
                                 <div className="room-closed-screen-card">
                                     <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: 30.07</p>
-                                    <p className="stat">pb: 21.59</p>
-                                    <p className="stat">ao5: 35.01</p>
-                                    <p className="stat">ao12: 34.94</p>
+                                    <p className="stat">avg: --:--</p>
+                                    <p className="stat">pb: --:--</p>
+                                    <p className="stat">ao5: --:--</p>
+                                    <p className="stat">ao12: --:--</p>
                                 </div>
                                 <div className="room-closed-screen-card">
                                     <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: 30.07</p>
-                                    <p className="stat">pb: 21.59</p>
-                                    <p className="stat">ao5: 35.01</p>
-                                    <p className="stat">ao12: 34.94</p>
+                                    <p className="stat">avg: --:--</p>
+                                    <p className="stat">pb: --:--</p>
+                                    <p className="stat">ao5: --:--</p>
+                                    <p className="stat">ao12: --:--</p>
                                 </div>
                             </div>
-                            <button className="room-closed-screen-btn" onClick={() => { props.setIsLogin(true); props.setIsRoomClosedScreen(false); }}>Return To Home</button>
+                            <button className="room-closed-screen-btn" onClick={() => { props.setIsTimerScreen(false); props.setIsLogin(true); props.setIsRoomClosedScreen(false); }}>Return To Home</button>
                         </div>
                         <p className="made-with-harth-end-screen">thanks for using friendcube ❤️</p>
                     </animated.div > : ""

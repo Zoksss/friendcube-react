@@ -57,6 +57,10 @@ function App() {
     if (!data.joined) addNotification("Warning!", data.nickname + " has left the room!");
   })
 
+  const returnToHomeFromRoomClosedScreen = () => {
+    setIsRoomClosedScreen(false);
+    setIsLogin(true);
+  }
 
   return (
     <div className="App">
@@ -90,6 +94,7 @@ function App() {
         isRoomClosedScreen={isRoomClosedScreen}
         setIsRoomClosedScreen={setIsRoomClosedScreen}
         setIsLogin={setIsLogin}
+        setIsTimerScreen={setIsTimerScreen}
       />
       <Timer
         socket={socket}

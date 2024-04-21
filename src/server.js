@@ -106,6 +106,7 @@ io.on("connection", (socket) => {
             time += 2000;
         }
 
+        console.log(data.ao5);
         rooms[data.roomCode].timesArray = [
             ...rooms[data.roomCode].timesArray.slice(0, 1),
             {

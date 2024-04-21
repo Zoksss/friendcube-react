@@ -74,11 +74,15 @@ const Timer = (props) => {
     let x = opponetsStats;
 
     let arrayItem = timesArrayFromSrv[1];
+    console.log("ao5 from server: " + arrayItem.ao5)
     x[arrayItem.playerName] = { playerName: arrayItem.playerName, playerTime: arrayItem.playerTime, ao5: arrayItem.ao5, ao12: arrayItem.ao12 }
     setOpponetsStats(x);
     setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (x[playerNicknames[playerNicknamesIndex]].playerTime)
+    if (x[playerNicknames[playerNicknamesIndex]].playerTime) {
       setOpponetTime(x[playerNicknames[playerNicknamesIndex]].playerTime);
+      setOpponetAo5(x[playerNicknames[playerNicknamesIndex]].ao5);
+      setOpponetAo12(x[playerNicknames[playerNicknamesIndex]].ao12);
+    }
   })
 
 
@@ -177,17 +181,16 @@ const Timer = (props) => {
   // other functions
 
   const fireTimeToServer = (currentFinishedStatus) => {
-    calculateAvgs(currentFinishedStatus);
+    let avgs = calculateAvgs(currentFinishedStatus);
     if (currentFinishedStatus !== "x") {
       props.socket.emit("finalTime", {
         roomCode: props.roomInputValue
         , playerTime: currentTime
-        , ao5: ao5
-        , ao12: ao12
+        , ao5: avgs[0]
+        , ao12: avgs[1]
         , finishedStatus: currentFinishedStatus // finished, dnf, plus2, x
       });
       isRoundReady = false;
-      console.log("round is: ", isRoundReady);
       setIsHidden(false);
       setCurrentScramble("Waiting for others to finish...")
     }
@@ -202,9 +205,10 @@ const Timer = (props) => {
     if (times.length >= 13) times.pop();
     setTimes(x);
 
+    let ao5temp = 0;
     // eslint-disable-next-line
     ao12Start: if (times.length >= 5) {
-      let ao5temp = 0;
+      ao5temp = 0;
       for (let i = 0; i < 5; i++) {
         if (times[i] === "dnf") {
           setAo5("dnf");
@@ -217,8 +221,9 @@ const Timer = (props) => {
       ao5temp = ao5temp / 5;
       setAo5(ao5temp);
     }
+    let ao12temp = 0;
     if (times.length >= 12) {
-      let ao12temp = 0;
+      ao12temp = 0;
       for (let i = 0; i < 12; i++) {
         if (times[i] === "dnf") {
           setAo12("dnf");
@@ -229,6 +234,7 @@ const Timer = (props) => {
       ao12temp = ao12temp / 12;
       setAo12(ao12temp);
     }
+    return [ao5temp, ao12temp]
   }
 
 
@@ -243,8 +249,12 @@ const Timer = (props) => {
     else playerNicknamesIndex++;
 
     setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (opponetsStats[playerNicknames[playerNicknamesIndex]] && opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime)
+    if (opponetsStats[playerNicknames[playerNicknamesIndex]] && opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime) {
       setOpponetTime(opponetsStats[playerNicknames[playerNicknamesIndex]].playerTime);
+      setOpponetAo5(opponetsStats[playerNicknames[playerNicknamesIndex]].ao5);
+      setOpponetAo12(opponetsStats[playerNicknames[playerNicknamesIndex]].ao12);
+      console.log("opponet of ao5: ", opponetsStats[playerNicknames[playerNicknamesIndex]].ao5)
+    }
   }
 
 
@@ -313,8 +323,8 @@ const Timer = (props) => {
               <p className="opponet-time">{opponetTime !== -1 ? formatTime(opponetTime) : "--:--"}</p>
             </div>
             <div className="opponet-avg">
-              <p className="opponet-ao5">ao5: {opponetAo5 !== -1 ? opponetAo5 : "--:--"}</p>
-              <p className="opponet-ao12">ao12: {opponetAo12 !== -1 ? opponetAo12 : "--:--"}</p>
+              <p className="opponet-ao5">ao5: {opponetAo5 !== -1 ? formatTime(opponetAo5) : "--:--"}</p>
+              <p className="opponet-ao12">ao12: {opponetAo12 !== -1 ? formatTime(opponetAo12) : "--:--"}</p>
             </div>
           </div>
         }
