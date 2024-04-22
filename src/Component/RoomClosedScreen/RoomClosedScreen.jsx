@@ -1,8 +1,35 @@
 import './RoomClosedScreen.scss';
 import { useTransition, animated } from "react-spring"
 
+import RoomClosedCard from './RoomClosedCard';
+import React from 'react';
 
 const RoomClosedScreen = (props) => {
+
+    const [roomClosedUsers, setRoomClosedUsers] = React.useState([])
+    const roomClosedUsersListed = roomClosedUsers.map((socket, i) => < RoomClosedCard key={i} nickname={socket.socketNickname} avg={socket.playerAvg} pb={socket.pb} ao5={socket.playerAo5} ao12={socket.playerAo12}/>)
+
+    props.socket.on("roomclosed-data-send", (roomData) => {
+        console.log(roomData);
+        let bestPbIndex = -1, bestAvgIndex = -1, bestPbTemp = -1, bestAvgTemp = -1;
+        let x = [];
+        for (let i = 0; i < roomData.sockets.length; i++) {
+            x = roomClosedUsers;
+            let socket = roomData.sockets[i];
+            if (socket.pb > bestPbTemp) {
+                bestPbTemp = socket.pb
+                bestPbIndex = i;
+            }
+            if (socket.playerAvg > bestAvgTemp) {
+                bestAvgTemp = socket.playerAvg;
+                bestAvgIndex = i;
+            }
+            x.push(roomData.sockets[i])
+        }
+        //x[bestPbIndex].isPb = true;
+        //x[bestAvgIndex].isAvg = true;
+        setRoomClosedUsers(roomData.sockets);
+    })
 
     const transition = useTransition(props.isRoomClosedScreen, {
         from: { top: -70, opacity: 0 },
@@ -18,36 +45,7 @@ const RoomClosedScreen = (props) => {
                             <p className="room-closed-screen-title">Room <span className="room-closed-screen-title-roomcode">05519235</span> Closed</p>
                             <p className="room-closed-screen-subtitle">Final Player Stats</p>
                             <div className="room-closed-screen-card-holder">
-                                <div className="room-closed-screen-card">
-                                    <p className="best-avg">Best AVG!</p>
-                                    <p className="player-name">name</p>
-                                    <p className="stat">avg: --:--</p>
-                                    <p className="stat">pb: --:--</p>
-                                    <p className="stat">ao5: --:--</p>
-                                    <p className="stat">ao12: --:--</p>
-                                </div>
-                                <div className="room-closed-screen-card">
-                                    <p className="best-pr">Best PR!</p>
-                                    <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: --:--</p>
-                                    <p className="stat">pb: --:--</p>
-                                    <p className="stat">ao5: --:--</p>
-                                    <p className="stat">ao12: --:--</p>
-                                </div>
-                                <div className="room-closed-screen-card">
-                                    <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: --:--</p>
-                                    <p className="stat">pb: --:--</p>
-                                    <p className="stat">ao5: --:--</p>
-                                    <p className="stat">ao12: --:--</p>
-                                </div>
-                                <div className="room-closed-screen-card">
-                                    <p className="player-name">Zoks</p>
-                                    <p className="stat">avg: --:--</p>
-                                    <p className="stat">pb: --:--</p>
-                                    <p className="stat">ao5: --:--</p>
-                                    <p className="stat">ao12: --:--</p>
-                                </div>
+                                {roomClosedUsersListed}
                             </div>
                             <button className="room-closed-screen-btn" onClick={() => { props.setIsTimerScreen(false); props.setIsLogin(true); props.setIsRoomClosedScreen(false); }}>Return To Home</button>
                         </div>

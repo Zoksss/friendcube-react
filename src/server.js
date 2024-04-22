@@ -11,16 +11,16 @@ const io = new Server(server, {
 });
 
 class Room {
-    constructor(leader, puzzle) {
+    constructor(socket, leader, puzzle) {
         this.leader = leader;
         this.puzzle = puzzle;
         this.isLocked = false;
         this.round = 1;
-        this.sockets = [{ socketId: leader, isFinished: true }];
+        this.sockets = [{ socketId: leader, isFinished: true, socketNickname: socket.nickname, isFinished: true, pb: 999999999999999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false}];
         this.timesArray = [{ round: 1, playerName: "", playerTime: -1 }];
     }
     addSocket(socket) {
-        this.sockets.push({ socketId: socket.id, isFinished: true });
+        this.sockets.push({ socketId: socket.id, socketNickname: socket.nickname, isFinished: true, pb: 999999999999999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false});    //// add best time, ao5, ao12 and avg of all
     }
     removeSocket(socket, roomCode) {
         console.log("fireed")
@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
         }
         else {
             socket.nickname = nickname;
-            rooms[roomCode] = new Room(socket.id, puzzle);
+            rooms[roomCode] = new Room(socket, socket.id, puzzle);
             socket.join(roomCode);
             socket.emit("joinToTimerLeader", roomCode);
             io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
@@ -100,13 +100,9 @@ io.on("connection", (socket) => {
         let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
         if (!socketObjectInRoom) return;
 
-
         let time = data.playerTime;
-        if (data.finishedStatus === "plus2") {
-            time += 2000;
-        }
+        if (data.finishedStatus === "plus2") time += 2000;
 
-        console.log(data.ao5);
         rooms[data.roomCode].timesArray = [
             ...rooms[data.roomCode].timesArray.slice(0, 1),
             {
@@ -120,6 +116,13 @@ io.on("connection", (socket) => {
             ...rooms[data.roomCode].timesArray.slice(1)
         ];
 
+        socketObjectInRoom.playerAo5 = data.ao5;
+        socketObjectInRoom.playerAo12 = data.ao12;
+        console.log(socketObjectInRoom.playerAvg)
+        socketObjectInRoom.playerAvg = Number(socketObjectInRoom.playerAvg) + data.playerTime;
+        socketObjectInRoom.pb = (socketObjectInRoom.pb <= data.playerTime) ? socketObjectInRoom.pb : data.playerTime;
+
+        console.log(socketObjectInRoom);
         io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
         socketObjectInRoom.isFinished = true;
 
@@ -132,6 +135,10 @@ io.on("connection", (socket) => {
         rooms[data.roomCode].timesArray.unshift({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
         io.in(data.roomCode).emit("setScramble", generateScramble(rooms[data.roomCode].puzzle));
 
+    });
+
+    socket.on("roomclosed-data", (roomCode) => {
+        socket.emit("roomclosed-data-send", rooms[roomCode]);
     });
 
     socket.on("leaveRoom", () => {

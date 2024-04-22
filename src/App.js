@@ -57,11 +57,6 @@ function App() {
     if (!data.joined) addNotification("Warning!", data.nickname + " has left the room!");
   })
 
-  const returnToHomeFromRoomClosedScreen = () => {
-    setIsRoomClosedScreen(false);
-    setIsLogin(true);
-  }
-
   return (
     <div className="App">
       <div className="top-notif">Website is in development stage. Bugs are expected!</div>
@@ -95,6 +90,7 @@ function App() {
         setIsRoomClosedScreen={setIsRoomClosedScreen}
         setIsLogin={setIsLogin}
         setIsTimerScreen={setIsTimerScreen}
+        socket={socket}
       />
       <Timer
         socket={socket}

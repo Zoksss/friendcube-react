@@ -205,10 +205,10 @@ const Timer = (props) => {
     if (times.length >= 13) times.pop();
     setTimes(x);
 
-    let ao5temp = 0;
+    let ao5temp = -1;
     // eslint-disable-next-line
     ao12Start: if (times.length >= 5) {
-      ao5temp = 0;
+      ao5temp = -1;
       for (let i = 0; i < 5; i++) {
         if (times[i] === "dnf") {
           setAo5("dnf");
@@ -221,9 +221,9 @@ const Timer = (props) => {
       ao5temp = ao5temp / 5;
       setAo5(ao5temp);
     }
-    let ao12temp = 0;
+    let ao12temp = -1;
     if (times.length >= 12) {
-      ao12temp = 0;
+      ao12temp = -1;
       for (let i = 0; i < 12; i++) {
         if (times[i] === "dnf") {
           setAo12("dnf");
@@ -272,10 +272,10 @@ const Timer = (props) => {
 
   const leaveRoom = () => {
     console.log("socket leaving")
+    props.socket.emit("roomclosed-data", props.roomInputValue)
     props.setIsRoomClosedScreen(true);
     props.socket.emit("leaveRoom");
   }
-
 
   return (
     <>
