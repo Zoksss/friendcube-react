@@ -20,7 +20,7 @@ const RoomClosedCard = (props) => {
         <div className="room-closed-screen-card">
             <p className="best-avg">Best AVG!</p>
             <p className="player-name">{props.nickname}</p>
-            <p className="stat">avg: {(props.avg!==-1) ? formatTime(Number(props.avg)) : "--:--"}</p>
+            <p className="stat">avg: {(props.avg!==-1) ? formatTime(Number(props.avg)/Number(props.roundFromServer)) : "--:--"}</p>
             <p className="stat">pb: {(props.pb!==-1) ? formatTime(Number(props.pb)) : "--:--"}</p>
             <p className="stat">ao5: {(props.ao5!==-1) ? formatTime(Number(props.ao5)) : "--:--"}</p>
             <p className="stat">ao12: {(props.ao12!==-1) ? formatTime(Number(props.ao12)) : "--:--"}</p>

@@ -4,10 +4,12 @@ import { useTransition, animated } from "react-spring"
 import RoomClosedCard from './RoomClosedCard';
 import React from 'react';
 
+let roundFromServer = 1;
+
 const RoomClosedScreen = (props) => {
 
     const [roomClosedUsers, setRoomClosedUsers] = React.useState([])
-    const roomClosedUsersListed = roomClosedUsers.map((socket, i) => < RoomClosedCard key={i} nickname={socket.socketNickname} avg={socket.playerAvg} pb={socket.pb} ao5={socket.playerAo5} ao12={socket.playerAo12}/>)
+    const roomClosedUsersListed = roomClosedUsers.map((socket, i) => < RoomClosedCard roundFromServer={roundFromServer-1} key={i} nickname={socket.socketNickname} avg={socket.playerAvg} pb={socket.pb} ao5={socket.playerAo5} ao12={socket.playerAo12}/>)
 
     props.socket.on("roomclosed-data-send", (roomData) => {
         console.log(roomData);
@@ -24,6 +26,7 @@ const RoomClosedScreen = (props) => {
                 bestAvgTemp = socket.playerAvg;
                 bestAvgIndex = i;
             }
+            roundFromServer = roomData.round
             x.push(roomData.sockets[i])
         }
         //x[bestPbIndex].isPb = true;
