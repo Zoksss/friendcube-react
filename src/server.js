@@ -16,11 +16,11 @@ class Room {
         this.puzzle = puzzle;
         this.isLocked = false;
         this.round = 1;
-        this.sockets = [{ socketId: leader, isFinished: true, socketNickname: socket.nickname, isFinished: true, pb: 999999999999999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false}];
+        this.sockets = [{ socketId: leader, isFinished: true, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false}];
         this.timesArray = [{ round: 1, playerName: "", playerTime: -1 }];
     }
     addSocket(socket) {
-        this.sockets.push({ socketId: socket.id, socketNickname: socket.nickname, isFinished: true, pb: 999999999999999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false});    //// add best time, ao5, ao12 and avg of all
+        this.sockets.push({ socketId: socket.id, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false});    //// add best time, ao5, ao12 and avg of all
     }
     removeSocket(socket, roomCode) {
         console.log("fireed")
@@ -139,6 +139,7 @@ io.on("connection", (socket) => {
 
     socket.on("roomclosed-data", (roomCode) => {
         socket.emit("roomclosed-data-send", rooms[roomCode]);
+        socketDisconnect(socket);
     });
 
     socket.on("leaveRoom", () => {
@@ -168,6 +169,7 @@ const socketDisconnect = (socket) => {
             checkIfRoomIsEmpty(String(roomNames[i]));
             updateWaitingScreenStatus(String(roomNames[i]));
             console.log(rooms);
+            socket.leave(String(roomNames[i]));
             return;
         };
     }

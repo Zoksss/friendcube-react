@@ -78,7 +78,7 @@ const Timer = (props) => {
     x[arrayItem.playerName] = { playerName: arrayItem.playerName, playerTime: arrayItem.playerTime, ao5: arrayItem.ao5, ao12: arrayItem.ao12 }
     setOpponetsStats(x);
     setOpponetName(playerNicknames[playerNicknamesIndex]);
-    if (x[playerNicknames[playerNicknamesIndex]].playerTime) {
+    if (x[playerNicknames[playerNicknamesIndex]] && x[playerNicknames[playerNicknamesIndex]].playerTime) {
       setOpponetTime(x[playerNicknames[playerNicknamesIndex]].playerTime);
       setOpponetAo5(x[playerNicknames[playerNicknamesIndex]].ao5);
       setOpponetAo12(x[playerNicknames[playerNicknamesIndex]].ao12);
@@ -274,7 +274,6 @@ const Timer = (props) => {
     console.log("socket leaving")
     props.socket.emit("roomclosed-data", props.roomInputValue)
     props.setIsRoomClosedScreen(true);
-    props.socket.emit("leaveRoom");
   }
 
   return (

@@ -91,6 +91,7 @@ function App() {
         setIsLogin={setIsLogin}
         setIsTimerScreen={setIsTimerScreen}
         socket={socket}
+        roomInputValue={roomInputValue}
       />
       <Timer
         socket={socket}
