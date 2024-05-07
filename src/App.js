@@ -56,6 +56,9 @@ function App() {
   socket.on("joinedLeavedNotification", data => {
     if (!data.joined) addNotification("Warning!", data.nickname + " has left the room!");
   })
+  socket.on("serverError", (msg) => {
+    addNotification("error", msg )
+  });
 
   return (
     <div className="App">

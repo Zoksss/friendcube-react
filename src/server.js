@@ -16,11 +16,11 @@ class Room {
         this.puzzle = puzzle;
         this.isLocked = false;
         this.round = 1;
-        this.sockets = [{ socketId: leader, isFinished: true, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false}];
+        this.sockets = [{ socketId: leader, isFinished: true, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false }];
         this.timesArray = [{ round: 1, playerName: "", playerTime: -1 }];
     }
     addSocket(socket) {
-        this.sockets.push({ socketId: socket.id, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false});    //// add best time, ao5, ao12 and avg of all
+        this.sockets.push({ socketId: socket.id, socketNickname: socket.nickname, isFinished: true, pb: 9999999999, playerAo5: -1, playerAo5: -1, playerAvg: -1, isPb: false, isAvg: false });    //// add best time, ao5, ao12 and avg of all
     }
     removeSocket(socket, roomCode) {
         console.log("fireed")
@@ -45,34 +45,34 @@ io.on("connection", (socket) => {
     io.sockets.emit('onlineClientChange', online);
     socket.on("join", (nickname, roomCode, puzzle) => {
         console.log("rumoko: " + roomCode)
-        //if (validateInput(nickname, roomCode, puzzle)) {
-        if (doesUsernameAlrdeyExists(nickname, roomCode)) {
-            socket.emit("serverError", "Nickname alredy used in this room.");
-            return;
-        }
-        if (rooms[roomCode] != undefined) {
-            if (!rooms[roomCode].isLocked) {
-                socket.nickname = nickname;
-                rooms[roomCode].addSocket(socket);
-                socket.join(roomCode);
-                socket.emit("joinToTimer");
-                io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
-                socket.emit("leaderStartButton");
-                updateWaitingScreenStatus(roomCode);
-
+        if (validateInput(nickname, roomCode, puzzle)) {
+            if (doesUsernameAlrdeyExists(nickname, roomCode)) {
+                socket.emit("serverError", "Nickname alredy used in this room.");
+                return;
             }
-            else socket.emit("serverError", "Room Closed");
-        }
-        else {
-            socket.nickname = nickname;
-            rooms[roomCode] = new Room(socket, socket.id, puzzle);
-            socket.join(roomCode);
-            socket.emit("joinToTimerLeader", roomCode);
-            io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
-            updateWaitingScreenStatus(roomCode);
-        }
-        console.log(rooms);
-        //} else socket.emit("serverError", "Input not valid");
+            if (rooms[roomCode] != undefined) {
+                if (!rooms[roomCode].isLocked) {
+                    socket.nickname = nickname;
+                    rooms[roomCode].addSocket(socket);
+                    socket.join(roomCode);
+                    socket.emit("joinToTimer");
+                    io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+                    socket.emit("leaderStartButton");
+                    updateWaitingScreenStatus(roomCode);
+
+                }
+                else socket.emit("serverError", "Room Closed");
+            }
+            else {
+                socket.nickname = nickname;
+                rooms[roomCode] = new Room(socket, socket.id, puzzle);
+                socket.join(roomCode);
+                socket.emit("joinToTimerLeader", roomCode);
+                io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+                updateWaitingScreenStatus(roomCode);
+            }
+            console.log(rooms);
+        } else socket.emit("serverError", "Input not valid");
     });
 
     socket.on("leaderStartGamee", (roomCode) => {
@@ -193,14 +193,16 @@ const updateWaitingScreenStatus = (roomCode) => {
 }
 
 const validateInput = (nickname, roomCode, puzzle) => {
-    if (nickname === "") return false;
-    if (!isLetter(nickname.charAt(0))) return false;
-    for (let i = 0; i < nickname.length; i++) if (!isLetter(nickname.charAt(i))) return false;
-    if (nickname.length < 3) return false;
-    if (roomCode.length != 8) return false;
-    for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false;
-    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") return false;
+    if (nickname === "") return false; 
+    if (!isLetter(nickname.charAt(0))) return false; 
+    if (nickname.length < 3) return false; 
+    if (roomCode.length != 8) return false; 
+    for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false; 
+    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") return false; 
     return true;
+}
+function isLetter(str) {
+    return str.length === 1 && str.match(/[a-z]/i);
 }
 function isLetter(str) {
     return str.length === 1 && str.match(/[a-z]/i);

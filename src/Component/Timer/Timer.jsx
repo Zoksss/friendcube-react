@@ -36,6 +36,8 @@ const Timer = (props) => {
 
   const [opponetsStats, setOpponetsStats] = React.useState({});
 
+  const [sidebarUI, setSidebarUI] = React.useState([]);
+
 
   const [currentScramble, setCurrentScramble] = React.useState("waiting for players...");
   const [isFinishedStatusScreen, setIsFinishStatusScreen] = React.useState(false);
@@ -180,6 +182,17 @@ const Timer = (props) => {
 
   // other functions
 
+  const resettUI = () => {
+    setAo5(-1);
+    setAo12(-1);
+    setOpponetName("N/A")
+    setOpponetTime(-1);
+    setOpponetAo5(-1);
+    setOpponetAo12(-1);
+    setCurrentScramble("waiting for players...");
+    setSidebarUI([]);
+  }
+
   const fireTimeToServer = (currentFinishedStatus) => {
     let avgs = calculateAvgs(currentFinishedStatus);
     if (currentFinishedStatus !== "x") {
@@ -273,7 +286,9 @@ const Timer = (props) => {
   const leaveRoom = () => {
     console.log("socket leaving")
     props.socket.emit("roomclosed-data", props.roomInputValue)
+    resettUI();
     props.setIsRoomClosedScreen(true);
+    
   }
 
   return (
@@ -302,6 +317,8 @@ const Timer = (props) => {
           isSettingScreen={isSettingScreen}
           isHidden={isHidden}
           leaveRoom={leaveRoom}
+          sidebarUI={sidebarUI}
+          setSidebarUI={setSidebarUI}
         />}
         {!isHidden && <div className="timer-top">
           <p className="timer-container-puzzle-label">{props.currentPuzzle}</p>
