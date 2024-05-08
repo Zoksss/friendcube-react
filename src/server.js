@@ -257,4 +257,4 @@ const doesUsernameAlrdeyExists = (nickname, roomCode) => {
 }
 
 
-server.listen(4000, () => { console.log("listening on *:4000"); });
+server.listen(10000, () => { console.log("listening on *:10000"); });
