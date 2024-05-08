@@ -30,7 +30,7 @@ const Sidebar = (props) => {
     React.useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) setIsSidebarVisible(true);
-        };
+        }; 
 
         window.addEventListener('resize', handleResize);
         return () => {
