@@ -190,13 +190,18 @@
 @media only screen and (max-width: 576px) {
     .logincreate-container {
         flex-direction: column-reverse !important;
+        background-color: #201e1f;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     .login-create-input {
         width: 100% !important;
-        height: 100vh !important;
+        //height: 100vh !important;
         position: absolute;
         top: 0;
         left: 0;
+        height: 700px !important;
 
         .login-form {
             position: absolute !important;
@@ -209,8 +214,8 @@
             margin-top: 30px;
         }
         .login-create-input-title {
-            margin-top: 50px;
-            margin-top: 50px;
+            //margin-top: 50px;
+            //margin-top: 50px;
         }
 
         .login-create-input-mobile-subititle {
