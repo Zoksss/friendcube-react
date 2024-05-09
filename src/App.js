@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react';
-
 // const springs = useSprings(number, items.map(item => ({ opacity: item.opacity }))
 
 import Timer from './Component/Timer/Timer';
@@ -10,7 +9,8 @@ import Notification from './Component/Notification/Notification';
 import RoomClosedScreen from './Component/RoomClosedScreen/RoomClosedScreen';
 
 import io from "socket.io-client";
-const socket = io.connect("http://localhost:4000");
+const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:4000';
+const socket = io.connect(URL);
 
 
 function App() {
