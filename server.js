@@ -13,6 +13,36 @@ const io = new Server(server, {
 });
 
 
+class RateLimiter {
+    constructor(limit) {
+        this.limit = limit;
+        this.tokens = {};
+    }
+
+    // Check if the client has enough tokens to proceed
+    checkTokens(socketId) {
+        if (!this.tokens[socketId]) {
+            this.tokens[socketId] = this.limit;
+            setTimeout(() => {
+                delete this.tokens[socketId];
+            }, 1000); // Token regeneration rate: 1 second
+            return true;
+        }
+        return this.tokens[socketId]-- > 0;
+    }
+}
+
+const rateLimiter = new RateLimiter(2); // Allow 5 events per second per client
+
+// Rate limiting middleware
+io.use((socket, next) => {
+    if (rateLimiter.checkTokens(socket.id)) {
+        next();
+    } else {
+        // Rate limit exceeded, reject the event
+        socket.emit("serverError", "Server Error: Rate limit exceeded.");
+    }
+});
 
 
 app.use(express.static(path.join(__dirname, "/build")));

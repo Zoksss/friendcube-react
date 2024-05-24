@@ -18,10 +18,10 @@ function App() {
   const [notificationsList, setNotificationsList] = React.useState([]);
 
 
-  const [isLogin, setIsLogin] = React.useState(true);
-  const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);
-  const [isTimerScreen, setIsTimerScreen] = React.useState(false);
-  const [isRoomClosedScreen, setIsRoomClosedScreen] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(false); //default: true
+  const [isJoinedPlayers, setIsJoinedPlayers] = React.useState(false);        
+  const [isTimerScreen, setIsTimerScreen] = React.useState(false);          
+  const [isRoomClosedScreen, setIsRoomClosedScreen] = React.useState(true); //default: false
 
   const [roomInputValue, setRoomInputValue] = React.useState("");
   // eslint-disable-next-line

@@ -86,10 +86,34 @@
     }
 }
 
-.made-with-harth-end-screen{
+.made-with-harth-end-screen {
     z-index: 99999;
-        position: absolute;
-        bottom: 16vh;
-        left: 50%;
-        transform: translate(-50%, 0);
+    position: absolute;
+    bottom: 16vh;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+@media only screen and (max-width: 675px) {
+    .room-closed-screen {
+        .room-closed-screen-container {
+            width: 100% !important;
+            height: 100vh !important;
+            justify-content: start !important;
+
+            .room-closed-screen-card-holder {
+                overflow-y: scroll !important;
+                flex-direction: column !important;
+                gap: 30px;
+                width: 300px !important;
+                &::-webkit-scrollbar {
+                    width: 5px;
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+    .made-with-harth-end-screen {
+        display: none !important;
+    }
 }
