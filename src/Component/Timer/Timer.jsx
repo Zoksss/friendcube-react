@@ -111,7 +111,8 @@ const Timer = (props) => {
   // space handling logic and useEffect
   React.useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.code === 'Space' && !isSpaceHeld) {
+      console.log("touch")
+      if (event.touches || (event.code === 'Space' && !isSpaceHeld)) {
         spacePressed();
         setIsSpaceHeld(true);
         setHoldTimeout(setTimeout(spaceHolded, timerDelay));
@@ -119,7 +120,7 @@ const Timer = (props) => {
     };
 
     const handleKeyUp = (event) => {
-      if (event.code === 'Space') {
+      if (event.touches || event.code === 'Space') {
         if (isSpaceHeld) {
           if (isSpace) startStopwatch();
           spaceDepressed();
@@ -152,9 +153,14 @@ const Timer = (props) => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
+    window.addEventListener('touchstart', handleKeyDown);
+    window.addEventListener('touchend', handleKeyUp);
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('touchstart', handleKeyDown);
+      window.removeEventListener('touchend', handleKeyUp);
       clearTimeout(holdTimeout);
     };
   }, [holdTimeout, isSpaceHeld]);
@@ -288,7 +294,7 @@ const Timer = (props) => {
     props.socket.emit("roomclosed-data", props.roomInputValue)
     resettUI();
     props.setIsRoomClosedScreen(true);
-    
+
   }
 
   return (
