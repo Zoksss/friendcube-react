@@ -5,18 +5,36 @@
     overflow: hidden;
     margin: 0;
     padding: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     .timer-top {
         .timer-container-puzzle-label {
             font-size: 22px;
             color: #ee6c4d;
             margin: 0;
             margin-top: 20px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .timer-container-scramble {
             font-size: 28px;
             margin: 0 auto;
             max-width: 55vw;
             width: 100%;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     }
     .timer-container-center {
@@ -24,6 +42,12 @@
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         .time {
             font-size: 100px;
             margin: 0;
@@ -41,6 +65,12 @@
         top: 80%;
         left: 50%;
         transform: translate(-50%, -50%);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         .opponet-time {
             .opponet-nickname,
             .opponet-time {
@@ -49,14 +79,14 @@
                 margin: 0;
             }
         }
-        .opponet-nickname{
+        .opponet-nickname {
             border: none;
             outline: none;
             background-color: transparent;
             padding: 7px 20px;
             transition: 300ms all ease;
             cursor: pointer;
-            &:hover{
+            &:hover {
                 background-color: #443e3e;
             }
         }
@@ -80,7 +110,7 @@
     //background-color: #181818;
     width: 200px;
     height: 100%;
-    padding: 15px;
+    padding: 20px 15px 15px 15px;
     font-weight: 500;
     height: 85vh;
     overflow-y: scroll;
@@ -90,7 +120,7 @@
     &::-webkit-scrollbar {
         width: 5px;
         background-color: transparent;
-      }
+    }
     .sidebar-round {
         width: 100%;
         background-color: #443e3e;
@@ -118,7 +148,7 @@
 
 .sidebar-buttons-container {
     position: absolute;
-    bottom: 0px;
+    bottom: 10px;
     left: 0;
     width: 200px;
     padding: 0 5px;
@@ -163,9 +193,8 @@
     }
 }
 
-
 @media only screen and (max-width: 768px) {
-    .sidebar{
+    .sidebar {
         display: none;
         width: 240px;
         background-color: #181818;
@@ -173,26 +202,27 @@
 }
 
 @media only screen and (max-width: 576px) {
-    .timer-container{
+    .timer-container {
         padding: 0 20px;
     }
-    .timer-container-scramble{
+    .timer-container-scramble {
         font-size: 24px !important;
     }
-    .timer-container-opponet{
-        top:70% !important;
+    .timer-container-opponet {
+        top: 70% !important;
     }
-    .sidebar{
+    .sidebar {
         width: 100% !important;
     }
-    .sidebar-buttons-container{
+    .sidebar-buttons-container {
         width: 100%;
         padding: 0 20vw;
     }
-    .time{
+    .time {
         font-size: 80px !important;
     }
-    .ao5, .ao12{
+    .ao5,
+    .ao12 {
         font-size: 24px !important;
     }
-  }
+}

@@ -82,98 +82,111 @@ io.on("connection", (socket) => {
     console.log("Made socket connection with id: " + socket.id);
     online++;
     io.sockets.emit('onlineClientChange', online);
-    socket.on("join", (nickname, roomCode, puzzle) => {
-        console.log("rumoko: " + roomCode)
-        if (validateInput(nickname, roomCode, puzzle)) {
-            if (doesUsernameAlrdeyExists(nickname, roomCode)) {
-                socket.emit("serverError", "Nickname alredy used in this room.");
-                return;
-            }
-            if (rooms[roomCode] != undefined) {
-                if (!rooms[roomCode].isLocked) {
-                    socket.nickname = nickname;
-                    rooms[roomCode].addSocket(socket);
-                    socket.join(roomCode);
-                    socket.emit("joinToTimer");
-                    io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
-                    socket.emit("leaderStartButton");
-                    updateWaitingScreenStatus(roomCode);
-
+    try {
+        socket.on("join", (nickname, roomCode, puzzle) => {
+            console.log("rumoko: " + roomCode)
+            if (validateInput(nickname, roomCode, puzzle)) {
+                if (doesUsernameAlrdeyExists(nickname, roomCode)) {
+                    socket.emit("serverError", "Nickname alredy used in this room.");
+                    return;
                 }
-                else socket.emit("serverError", "Room Closed");
-            }
-            else {
-                socket.nickname = nickname;
-                rooms[roomCode] = new Room(socket, socket.id, puzzle);
-                socket.join(roomCode);
-                socket.emit("joinToTimerLeader", roomCode);
-                io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
-                updateWaitingScreenStatus(roomCode);
-            }
-            console.log(rooms);
-        } else socket.emit("serverError", "Input not valid");
-    });
+                if (rooms[roomCode] != undefined) {
+                    if (!rooms[roomCode].isLocked) {
+                        socket.nickname = nickname;
+                        rooms[roomCode].addSocket(socket);
+                        socket.join(roomCode);
+                        socket.emit("joinToTimer");
+                        io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+                        socket.emit("leaderStartButton");
+                        updateWaitingScreenStatus(roomCode);
+
+                    }
+                    else socket.emit("serverError", "Room Closed");
+                }
+                else {
+                    socket.nickname = nickname;
+                    rooms[roomCode] = new Room(socket, socket.id, puzzle);
+                    socket.join(roomCode);
+                    socket.emit("joinToTimerLeader", roomCode);
+                    io.in(roomCode).emit("joinedLeavedNotification", { nickname: nickname, joined: true });
+                    updateWaitingScreenStatus(roomCode);
+                }
+                console.log(rooms);
+            } else socket.emit("serverError", "Input not valid");
+        });
+    } catch (e) {
+        socket.emit("serverError", "Server Error: " + e);
+    }
 
     socket.on("leaderStartGamee", (roomCode) => {
         // start game
-        if (!rooms[roomCode]) return;
-        if (!rooms[roomCode].sockets.filter(o => o.leader === socket.id));
+        try {
+            if (!rooms[roomCode]) return;
+            if (!rooms[roomCode].sockets.filter(o => o.leader === socket.id));
 
-        rooms[roomCode].isLocked = true;
-        for (let i = 0; i < rooms[roomCode].sockets.length; i++)
-            rooms[roomCode].sockets[i].isFinished = false;
+            rooms[roomCode].isLocked = true;
+            for (let i = 0; i < rooms[roomCode].sockets.length; i++)
+                rooms[roomCode].sockets[i].isFinished = false;
 
-        io.in(roomCode).emit("setScramble", generateScramble(rooms[roomCode].puzzle));
-        io.in(roomCode).emit("startGame", rooms[roomCode].puzzle);
-        let x = [];
-        rooms[roomCode].sockets.forEach(socket => {
-            let socketNickname = io.sockets.sockets.get(socket.socketId).nickname;
-            x.push(socketNickname);
-        });
+            io.in(roomCode).emit("setScramble", generateScramble(rooms[roomCode].puzzle));
+            io.in(roomCode).emit("startGame", rooms[roomCode].puzzle);
+            let x = [];
+            rooms[roomCode].sockets.forEach(socket => {
+                let socketNickname = io.sockets.sockets.get(socket.socketId).nickname;
+                x.push(socketNickname);
+            });
 
-        io.in(roomCode).emit("updatePlayerNicknnameArray", x);
+            io.in(roomCode).emit("updatePlayerNicknnameArray", x);
+        }
+        catch (e) {
+            socket.emit("serverError", "Server Error: " + e);
+        }
     });
 
     socket.on("finalTime", (data) => {
-        if (!rooms[data.roomCode]) return;
-        let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
-        if (!socketObjectInRoom) return;
+        try {
+            if (!rooms[data.roomCode]) return;
+            let socketObjectInRoom = rooms[data.roomCode].sockets.find(o => o.socketId === socket.id);
+            if (!socketObjectInRoom) return;
 
-        let time = data.playerTime;
-        if (data.finishedStatus === "plus2") time += 2000;
+            let time = data.playerTime;
+            if (data.finishedStatus === "plus2") time += 2000;
 
-        rooms[data.roomCode].timesArray = [
-            ...rooms[data.roomCode].timesArray.slice(0, 1),
-            {
-                round: rooms[data.roomCode].round,
-                ao5: data.ao5,
-                ao12: data.ao12,
-                playerName: socket.nickname,
-                playerTime: time,
-                finishedStatus: data.finishedStatus
-            },
-            ...rooms[data.roomCode].timesArray.slice(1)
-        ];
+            rooms[data.roomCode].timesArray = [
+                ...rooms[data.roomCode].timesArray.slice(0, 1),
+                {
+                    round: rooms[data.roomCode].round,
+                    ao5: data.ao5,
+                    ao12: data.ao12,
+                    playerName: socket.nickname,
+                    playerTime: time,
+                    finishedStatus: data.finishedStatus
+                },
+                ...rooms[data.roomCode].timesArray.slice(1)
+            ];
 
-        socketObjectInRoom.playerAo5 = data.ao5;
-        socketObjectInRoom.playerAo12 = data.ao12;
-        console.log(socketObjectInRoom.playerAvg)
-        socketObjectInRoom.playerAvg = Number(socketObjectInRoom.playerAvg) + data.playerTime;
-        socketObjectInRoom.pb = (socketObjectInRoom.pb <= data.playerTime) ? socketObjectInRoom.pb : data.playerTime;
+            socketObjectInRoom.playerAo5 = data.ao5;
+            socketObjectInRoom.playerAo12 = data.ao12;
+            console.log(socketObjectInRoom.playerAvg)
+            socketObjectInRoom.playerAvg = Number(socketObjectInRoom.playerAvg) + data.playerTime;
+            socketObjectInRoom.pb = (socketObjectInRoom.pb <= data.playerTime) ? socketObjectInRoom.pb : data.playerTime;
 
-        console.log(socketObjectInRoom);
-        io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
-        socketObjectInRoom.isFinished = true;
+            console.log(socketObjectInRoom);
+            io.in(data.roomCode).emit("timeGetFromSocket", rooms[data.roomCode].timesArray);
+            socketObjectInRoom.isFinished = true;
 
-        if (!isEveryoneFinished(data.roomCode)) return;
-        rooms[data.roomCode].round++;
-        io.in(data.roomCode).emit("ready", rooms[data.roomCode].round);
-        for (let i = 0; i < rooms[data.roomCode].sockets.length; i++)
-            rooms[data.roomCode].sockets[i].isFinished = false;
+            if (!isEveryoneFinished(data.roomCode)) return;
+            rooms[data.roomCode].round++;
+            io.in(data.roomCode).emit("ready", rooms[data.roomCode].round);
+            for (let i = 0; i < rooms[data.roomCode].sockets.length; i++)
+                rooms[data.roomCode].sockets[i].isFinished = false;
 
-        rooms[data.roomCode].timesArray.unshift({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
-        io.in(data.roomCode).emit("setScramble", generateScramble(rooms[data.roomCode].puzzle));
-
+            rooms[data.roomCode].timesArray.unshift({ round: rooms[data.roomCode].round, playerName: "", playerTime: -1 });
+            io.in(data.roomCode).emit("setScramble", generateScramble(rooms[data.roomCode].puzzle));
+        }
+        catch (e) {
+            socket.emit("serverError", "Server Error: " + e);
+        }
     });
 
     socket.on("roomclosed-data", (roomCode) => {
@@ -197,20 +210,24 @@ io.on("connection", (socket) => {
 // functions
 
 const socketDisconnect = (socket) => {
-    console.log("socket disconnecting")
-    let roomNames = Array.from(socket.rooms);
-    console.log(roomNames);
-    for (let i = 1; i < roomNames.length; i++) {
-        console.log("Roomname = " + String(roomNames[i]));
-        if (String(roomNames[i]) != socket.id) {
-            io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
-            rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
-            checkIfRoomIsEmpty(String(roomNames[i]));
-            updateWaitingScreenStatus(String(roomNames[i]));
-            console.log(rooms);
-            socket.leave(String(roomNames[i]));
-            return;
-        };
+    try {
+        console.log("socket disconnecting")
+        let roomNames = Array.from(socket.rooms);
+        console.log(roomNames);
+        for (let i = 1; i < roomNames.length; i++) {
+            console.log("Roomname = " + String(roomNames[i]));
+            if (String(roomNames[i]) != socket.id) {
+                io.in(String(roomNames[i])).emit("joinedLeavedNotification", { nickname: socket.nickname, joined: false });
+                rooms[String(roomNames[i])].removeSocket(socket, String(roomNames[i]));
+                checkIfRoomIsEmpty(String(roomNames[i]));
+                updateWaitingScreenStatus(String(roomNames[i]));
+                console.log(rooms);
+                socket.leave(String(roomNames[i]));
+                return;
+            };
+        }
+    } catch (e) {
+        socket.emit("serverError", "Server Error: " + e);
     }
 }
 
@@ -232,12 +249,12 @@ const updateWaitingScreenStatus = (roomCode) => {
 }
 
 const validateInput = (nickname, roomCode, puzzle) => {
-    if (nickname === "") return false; 
-    if (!isLetter(nickname.charAt(0))) return false; 
-    if (nickname.length < 3) return false; 
-    if (roomCode.length != 8) return false; 
-    for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false; 
-    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") return false; 
+    if (nickname === "") return false;
+    if (!isLetter(nickname.charAt(0))) return false;
+    if (nickname.length < 3) return false;
+    if (roomCode.length != 8) return false;
+    for (let i = 0; i < roomCode.length; i++) if (isNaN(roomCode.charAt(i))) return false;
+    if (puzzle != "3x3" && puzzle != "2x2" && puzzle != "pyraminx") return false;
     return true;
 }
 function isLetter(str) {
