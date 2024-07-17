@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border: 1px solid greenyellow !important;
 }
 
 body {
@@ -15,7 +16,9 @@ body {
   background-color: #201E1F;
   color: #FFFFFF;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  overflow-y: hidden;
+  height: 100vh !important;
+  width: 100% !important;
+  overflow: hidden !important;
 }
 
 code {

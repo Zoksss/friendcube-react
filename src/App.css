@@ -1,14 +1,16 @@
 .App {
+  position: fixed;
+  left: 0;
+  top: 0;
   text-align: center;
   height: 100%;
-    min-height: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
-    max-height: 100vh;
-    padding-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  max-height: 100vh;
+  padding-bottom: 10px;
 }
-
 
 .App-header {
   background-color: #282c34;
@@ -20,9 +22,9 @@
   color: white;
 }
 
-.top-notif{
+.top-notif {
   background-color: #ee6c4d;
-  color:rgba(0, 0, 0, 0.758);
+  color: rgba(0, 0, 0, 0.758);
   position: absolute;
   padding: 3px 0;
   top: 0;
@@ -31,7 +33,8 @@
   z-index: 9999999999999999999999;
 }
 
-body, html {
+body,
+html {
   height: 100%;
   width: 100%;
   margin: 0;
