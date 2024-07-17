@@ -1,7 +1,7 @@
 .timer-container {
     position: relative;
     font-weight: 800;
-    height: 97vh;
+    height: 100%;
     overflow: hidden;
     margin: 0;
     padding: 0;
@@ -11,6 +11,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     .timer-top {
         .timer-container-puzzle-label {
             font-size: 22px;

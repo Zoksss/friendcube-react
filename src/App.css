@@ -8,7 +8,6 @@
   box-sizing: border-box;
   overflow-x: hidden !important;
   overflow-y: hidden !important;
-  max-height: 100vh;
   padding-bottom: 10px;
 }
 
