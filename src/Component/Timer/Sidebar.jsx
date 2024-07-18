@@ -13,7 +13,7 @@ import React from 'react';
 
 const Sidebar = (props) => {
 
-    const [isSidebarVisible, setIsSidebarVisible] = React.useState((window.innerWidth >= 768)?true:false);
+    const [isSidebarVisible, setIsSidebarVisible] = React.useState((window.innerWidth >= 768) ? true : false);
 
     const timesListed = props.sidebarUI.map((timeObj, i) => (timeObj.playerTime === -1) ? <div key={i} className="sidebar-round"><p>#{timeObj.round}</p></div> : <SidebarTime key={i} playerName={timeObj.playerName} playerTime={timeObj.playerTime} formatTime={props.formatTime} finishedStatus={timeObj.finishedStatus} />)
 
@@ -31,8 +31,8 @@ const Sidebar = (props) => {
     React.useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) setIsSidebarVisible(true);
-            else  setIsSidebarVisible(false);
-        }; 
+            else setIsSidebarVisible(false);
+        };
 
         window.addEventListener('resize', handleResize);
         return () => {
@@ -49,7 +49,8 @@ const Sidebar = (props) => {
                         {timesListed}
                     </animated.div > : ""
             )}
-            <div className="sidebar-buttons-container">
+
+            {props.isHidden & <div className="sidebar-buttons-container">
                 <div className="sidebar-buttons">
                     <div className="sidebar-buttons-top">
                         <button onClick={() => (window.innerWidth < 768) ? setIsSidebarVisible(!isSidebarVisible) : ""}
@@ -58,7 +59,7 @@ const Sidebar = (props) => {
                         <button onClick={() => props.leaveRoom()}><img src={LeaveRoom} alt="" /></button>
                     </div>
                 </div>
-            </div >
+            </div >}
 
         </>
     );
