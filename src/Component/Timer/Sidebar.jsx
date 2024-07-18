@@ -50,16 +50,18 @@ const Sidebar = (props) => {
                     </animated.div > : ""
             )}
 
-            {props.isHidden & <div className="sidebar-buttons-container">
-                <div className="sidebar-buttons">
-                    <div className="sidebar-buttons-top">
-                        <button onClick={() => (window.innerWidth < 768) ? setIsSidebarVisible(!isSidebarVisible) : ""}
-                            style={{ backgroundColor: isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Stacks} alt="" /></button>
-                        <button onClick={() => { props.setIsSettingsScreen(true) }} style={{ backgroundColor: props.isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Settings} alt="" /></button>
-                        <button onClick={() => props.leaveRoom()}><img src={LeaveRoom} alt="" /></button>
+            {!props.isHidden &&
+                <div className="sidebar-buttons-container">
+                    <div className="sidebar-buttons">
+                        <div className="sidebar-buttons-top">
+                            <button onClick={() => (window.innerWidth < 768) ? setIsSidebarVisible(!isSidebarVisible) : ""}
+                                style={{ backgroundColor: isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Stacks} alt="" /></button>
+                            <button onClick={() => { props.setIsSettingsScreen(true) }} style={{ backgroundColor: props.isSidebarVisible ? "#616161" : "#ee6c4d" }}><img src={Settings} alt="" /></button>
+                            <button onClick={() => props.leaveRoom()}><img src={LeaveRoom} alt="" /></button>
+                        </div>
                     </div>
-                </div>
-            </div >}
+                </div >
+            }
 
         </>
     );
