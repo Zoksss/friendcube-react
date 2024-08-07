@@ -14,16 +14,7 @@ const SettingsScreen = (props) => {
                 <div className="settings-wrapper">
                     <div className="settings-timer-delay">
                         <p>timer delay</p>
-                        <input type="number" defaultValue={props.timerDelay} onChange={(e) => props.setTimerDelay(e.target.value<200?200:e.target.value)}/>
-                    </div>
-                    <div className="settings-theme">
-                        <p>themes:</p>
-                        <div className="themes-buttons-container">
-                            <button ><img className="active" src={DefaultTheme} alt="" /></button>
-                            <button><img src={Light} alt="" /></button>
-                            <button><img src={PinkLight} alt="" /></button>
-                            <button><img src={Purple} alt="" /></button>
-                        </div>
+                        <input type="number" defaultValue={props.timerDelay} onChange={(e) => props.setTimerDelay(e.target.value < 200 ? 200 : e.target.value)} />
                     </div>
                 </div>
                 <div className="settings-screen-buttons">
@@ -35,3 +26,17 @@ const SettingsScreen = (props) => {
 }
 
 export default SettingsScreen;
+
+/*
+<div className="settings-theme">
+                        <p>themes:</p>
+                        <div className="themes-buttons-container">
+                            <button ><img className="active" src={DefaultTheme} alt="" /></button>
+                            <button><img src={Light} alt="" /></button>
+                            <button><img src={PinkLight} alt="" /></button>
+                            <button><img src={Purple} alt="" /></button>
+                        </div>
+                    </div>
+
+
+*/
